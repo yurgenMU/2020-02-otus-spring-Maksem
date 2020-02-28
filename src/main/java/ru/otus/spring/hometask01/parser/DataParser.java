@@ -1,9 +1,7 @@
-package ru.otus.spring.hometask01.loader;
+package ru.otus.spring.hometask01.parser;
 
 import ru.otus.spring.hometask01.domain.TestData;
 
-public interface TestDataLoader {
-
+public interface DataParser {
     TestData getTestData();
-
 }

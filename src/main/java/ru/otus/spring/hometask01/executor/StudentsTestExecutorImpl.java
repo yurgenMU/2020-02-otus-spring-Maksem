@@ -2,7 +2,7 @@ package ru.otus.spring.hometask01.executor;
 
 import ru.otus.spring.hometask01.domain.Question;
 import ru.otus.spring.hometask01.domain.TestData;
-import ru.otus.spring.hometask01.loader.TestDataLoader;
+import ru.otus.spring.hometask01.parser.DataParser;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,11 +17,11 @@ public class StudentsTestExecutorImpl implements StudentsTestExecutor {
 
     private static final double THRESHOLD = 0.6;
 
-    private final TestDataLoader testDataLoader;
+    private final DataParser dataParser;
     private Scanner scanner;
 
-    public StudentsTestExecutorImpl(TestDataLoader testDataLoader) {
-        this.testDataLoader = testDataLoader;
+    public StudentsTestExecutorImpl(DataParser dataParser) {
+        this.dataParser = dataParser;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class StudentsTestExecutorImpl implements StudentsTestExecutor {
         String name = scanner.nextLine().trim();
         System.out.println(SURNAME_QUERY);
         String surname = scanner.nextLine().trim();
-        TestData testData = testDataLoader.getTestData();
+        TestData testData = dataParser.getTestData();
         String description = testData.getDescription();
         List<Question> questions = testData.getQuestions();
         System.out.println(description);
@@ -56,6 +56,7 @@ public class StudentsTestExecutorImpl implements StudentsTestExecutor {
     private double processQuestion(Question question, double correctAnswersCounter) {
         System.out.println(question.getQuestionValue());
         List<String> answers = question.getAnswers();
+        Collections.shuffle(answers);
         IntStream.range(0, answers.size())
                 .forEach(i -> System.out.printf("%s) %s\n", i + 1, answers.get(i)));
         String clientAnswer = scanner.nextLine().trim();

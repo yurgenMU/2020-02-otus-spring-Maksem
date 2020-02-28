@@ -1,6 +1,5 @@
 package ru.otus.spring.hometask01.domain;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Question {
@@ -20,7 +19,6 @@ public class Question {
         this.questionValue = questionValue;
         this.answers = answers;
         this.correctAnswer = answers.get(0);
-        Collections.shuffle(answers);
     }
 
     public String getCorrectAnswer() {
