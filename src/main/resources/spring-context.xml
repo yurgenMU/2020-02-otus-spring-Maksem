@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="testDataLoader" class="ru.otus.spring.hometask01.loader.TestDataLoaderImpl">
+        <constructor-arg name="questionsResource" value="questions.csv"/>
+    </bean>
+
+    <bean id="studentsTestExecutor" class="ru.otus.spring.hometask01.executor.StudentsTestExecutorImpl">
+        <constructor-arg name="testDataLoader" ref="testDataLoader"/>
+    </bean>
+
+</beans>
