@@ -3,13 +3,11 @@ package ru.otus.spring.hometask01.parser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.otus.spring.hometask01.domain.Question;
 import ru.otus.spring.hometask01.domain.TestData;
 import ru.otus.spring.hometask01.loader.DataLoader;
+import ru.otus.spring.hometask01.util.StudentsTestException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 public class DataParserImpl implements DataParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataParserImpl.class);
 
     private static final String EMPTY = "";
     private final DataLoader dataLoader;
@@ -41,10 +38,9 @@ public class DataParserImpl implements DataParser {
                     .map(csvRecord -> new QuestionsFactory(csvRecord).getQuestion())
                     .collect(Collectors.toList());
             return new TestData(description, questions);
-        } catch (IOException e) {
-            LOGGER.error("Error while parsing data", e);
+        } catch (Exception e) {
+            throw new StudentsTestException("Error while parsing data", e);
         }
-        return null;
     }
 
     private String getDescription(CSVParser csvRecords) {

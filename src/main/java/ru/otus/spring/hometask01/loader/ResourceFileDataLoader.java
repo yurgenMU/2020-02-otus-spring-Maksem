@@ -3,11 +3,11 @@ package ru.otus.spring.hometask01.loader;
 import java.io.InputStream;
 
 
-public class DataLoaderImpl implements DataLoader {
+public class ResourceFileDataLoader implements DataLoader {
 
     private final String questionsResource;
 
-    public DataLoaderImpl(String questionsResource) {
+    public ResourceFileDataLoader(String questionsResource) {
         this.questionsResource = questionsResource;
     }
 
