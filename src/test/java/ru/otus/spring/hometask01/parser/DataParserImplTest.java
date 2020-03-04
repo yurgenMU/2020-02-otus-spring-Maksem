@@ -1,38 +1,41 @@
 package ru.otus.spring.hometask01.parser;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.spring.hometask01.domain.TestData;
 import ru.otus.spring.hometask01.loader.DataLoader;
-import ru.otus.spring.hometask01.loader.DataLoaderImpl;
+import ru.otus.spring.hometask01.loader.ResourceFileDataLoader;
+import ru.otus.spring.hometask01.util.StudentsTestException;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DataParserImplTest {
+@ExtendWith(MockitoExtension.class)
+class DataParserImplTest {
     private static final String QUESTIONS_RESOURCE = "questions.csv";
     private static final String SAMPLE_DESCRIPTION = "Test Sample";
     private static final String CORRECT_ANSWER = "Moscow";
 
 
     @Test
-    public void successfulParsingTest() {
-        DataLoaderImpl dataLoader = new DataLoaderImpl(QUESTIONS_RESOURCE);
+    void successfulParsingTest() {
+        ResourceFileDataLoader dataLoader = new ResourceFileDataLoader(QUESTIONS_RESOURCE);
         DataParserImpl dataParser = new DataParserImpl(dataLoader);
         TestData testData = dataParser.getTestData();
-        Assert.assertEquals(testData.getDescription(), SAMPLE_DESCRIPTION);
-        Assert.assertEquals(testData.getQuestions().get(0).getCorrectAnswer(), CORRECT_ANSWER);
+        assertEquals(testData.getDescription(), SAMPLE_DESCRIPTION);
+        assertEquals(testData.getQuestions().get(0).getCorrectAnswer(), CORRECT_ANSWER);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void nonexistentResourceTest() {
+    @Test
+    void nonexistentResourceTest() {
         DataLoader dataLoader = mock(DataLoader.class);
         when(dataLoader.loadData()).thenReturn(null);
         DataParserImpl dataParser = new DataParserImpl(dataLoader);
-        dataParser.getTestData();
+
+        assertThrows(StudentsTestException.class, dataParser::getTestData);
     }
 }
