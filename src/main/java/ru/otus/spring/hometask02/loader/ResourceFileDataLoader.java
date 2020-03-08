@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 public class ResourceFileDataLoader implements DataLoader {
 
-    private final String questionsResource;
+    private String questionsResource;
 
     public ResourceFileDataLoader(String questionsResource) {
         this.questionsResource = questionsResource;
@@ -17,4 +17,7 @@ public class ResourceFileDataLoader implements DataLoader {
         return classloader.getResourceAsStream(questionsResource);
     }
 
+    public void setQuestionsResource(String questionsResource) {
+        this.questionsResource = questionsResource;
+    }
 }

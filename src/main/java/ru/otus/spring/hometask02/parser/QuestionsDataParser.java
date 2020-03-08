@@ -3,10 +3,12 @@ package ru.otus.spring.hometask02.parser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.hometask02.domain.Question;
 import ru.otus.spring.hometask02.domain.TestData;
-import ru.otus.spring.hometask02.loader.DataLoader;
+import ru.otus.spring.hometask02.loader.ResourceFileDataLoader;
+import ru.otus.spring.hometask02.service.LanguagesService;
 import ru.otus.spring.hometask02.util.StudentsTestException;
 
 import java.io.InputStream;
@@ -17,17 +19,25 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 @Service
-public class DataParserImpl implements DataParser {
+public class QuestionsDataParser implements DataParser {
 
+    private static final String SOURCE_PROPERTY_NAME = "questions.path";
     private static final String EMPTY = "";
-    private final DataLoader dataLoader;
 
-    DataParserImpl(DataLoader dataLoader) {
+
+    private final ResourceFileDataLoader dataLoader;
+    private final LanguagesService languagesService;
+    private final MessageSource messageSource;
+
+    QuestionsDataParser(ResourceFileDataLoader dataLoader, LanguagesService languagesService, MessageSource messageSource) {
         this.dataLoader = dataLoader;
+        this.languagesService = languagesService;
+        this.messageSource = messageSource;
     }
 
     @Override
-    public TestData getTestData() {
+    public TestData parseData() {
+        dataLoader.setQuestionsResource(messageSource.getMessage(SOURCE_PROPERTY_NAME, null, languagesService.getChosenLocale()));
         CSVFormat csvFormat = CSVFormat.EXCEL.withFirstRecordAsHeader();
         return retrieveTestData(dataLoader.loadData(), csvFormat);
     }
@@ -37,7 +47,7 @@ public class DataParserImpl implements DataParser {
         try (CSVParser csvRecords = CSVParser.parse(inputStream, StandardCharsets.UTF_8, csvFormat)) {
             String description = getDescription(csvRecords);
             List<Question> questions = StreamSupport.stream(csvRecords.spliterator(), Boolean.FALSE)
-                    .map(csvRecord -> new QuestionsFactory(csvRecord).getQuestion())
+                    .map(this::createQuestion)
                     .collect(Collectors.toList());
             return new TestData(description, questions);
         } catch (Exception e) {
@@ -50,25 +60,16 @@ public class DataParserImpl implements DataParser {
         return headerNames.size() != 0 ? headerNames.get(0) : EMPTY;
     }
 
-    private class QuestionsFactory {
+    private Question createQuestion(CSVRecord csvRecord) {
+        String questionValue = csvRecord.get(0);
 
-        private Question question;
-
-        private Question getQuestion() {
-            return question;
+        List<String> answers = IntStream.range(1, csvRecord.size())
+                .boxed()
+                .map(csvRecord::get)
+                .collect(Collectors.toList());
+        if (answers.size() == 0) {
+            throw new RuntimeException("Questions list is empty");
         }
-
-        private QuestionsFactory(CSVRecord csvRecord) {
-            String questionValue = csvRecord.get(0);
-
-            List<String> answers = IntStream.range(1, csvRecord.size())
-                    .boxed()
-                    .map(csvRecord::get)
-                    .collect(Collectors.toList());
-            if (answers.size() == 0) {
-                throw new RuntimeException("Questions list is empty");
-            }
-            question = new Question(questionValue, answers);
-        }
+        return new Question(questionValue, answers);
     }
 }
