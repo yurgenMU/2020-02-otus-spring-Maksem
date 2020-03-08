@@ -1,7 +1,6 @@
 package ru.otus.spring.hometask02.domain;
 
 public class User {
-
     private final String firstName;
     private final String lastName;
 
