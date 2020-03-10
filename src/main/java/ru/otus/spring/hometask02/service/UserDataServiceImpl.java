@@ -1,9 +1,11 @@
 package ru.otus.spring.hometask02.service;
 
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.hometask02.domain.User;
 import ru.otus.spring.hometask02.io.IOService;
 
+@Service
 public class UserDataServiceImpl implements UserDataService {
     private static final String NAME_PROPERTY = "questions.name";
     private static final String SURNAME_PROPERTY = "questions.surname";

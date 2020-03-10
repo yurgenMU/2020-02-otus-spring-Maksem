@@ -8,12 +8,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import ru.otus.spring.hometask02.factory.IOFactory;
 import ru.otus.spring.hometask02.io.IOService;
 import ru.otus.spring.hometask02.loader.ResourceFileDataLoader;
-import ru.otus.spring.hometask02.parser.LanguagesDataParser;
 import ru.otus.spring.hometask02.service.LanguagesService;
-import ru.otus.spring.hometask02.service.LanguagesServiceImpl;
-import ru.otus.spring.hometask02.service.QuestionsProcessorImpl;
-import ru.otus.spring.hometask02.service.UserDataServiceImpl;
-
 
 @Configuration
 public class AppConfig {
@@ -39,15 +34,9 @@ public class AppConfig {
         return ioFactory().getStandardIOService();
     }
 
-
     @Bean
     ResourceFileDataLoader languagesDataLoader(@Value("languages.csv") String questionsResource) {
         return new ResourceFileDataLoader(questionsResource);
-    }
-
-    @Bean
-    LanguagesServiceImpl languageService(IOService ioService, LanguagesDataParser languagesDataParser) {
-        return new LanguagesServiceImpl(ioService, languagesDataParser);
     }
 
     @Bean
@@ -55,16 +44,5 @@ public class AppConfig {
         languagesService.chooseLocale();
         return new ResourceFileDataLoader(messageSource().getMessage(SOURCE_PROPERTY_NAME, null, languagesService.getChosenLocale()));
     }
-
-    @Bean
-    UserDataServiceImpl userDataService(IOService ioService, LanguagesService languagesService, MessageSource messageSource) {
-        return new UserDataServiceImpl(ioService, languagesService, messageSource);
-    }
-
-    @Bean
-    QuestionsProcessorImpl questionsProcessor(IOService ioService, MessageSource messageSource, LanguagesService languagesService) {
-        return new QuestionsProcessorImpl(ioService, messageSource, languagesService);
-    }
-
 
 }

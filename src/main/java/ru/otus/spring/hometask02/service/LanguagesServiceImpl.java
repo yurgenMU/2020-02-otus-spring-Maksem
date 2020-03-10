@@ -1,6 +1,7 @@
 
 package ru.otus.spring.hometask02.service;
 
+import org.springframework.stereotype.Service;
 import ru.otus.spring.hometask02.io.IOService;
 import ru.otus.spring.hometask02.parser.LanguagesDataParser;
 
@@ -12,6 +13,7 @@ import java.util.stream.IntStream;
 
 import static ru.otus.spring.hometask02.util.StudentsTestUtils.isNumeric;
 
+@Service
 public class LanguagesServiceImpl implements LanguagesService {
 
     private final IOService ioService;

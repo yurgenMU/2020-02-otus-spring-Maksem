@@ -1,6 +1,7 @@
 package ru.otus.spring.hometask02.service;
 
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.hometask02.domain.Question;
 import ru.otus.spring.hometask02.domain.TestData;
 import ru.otus.spring.hometask02.io.IOService;
@@ -13,7 +14,7 @@ import java.util.stream.IntStream;
 
 import static ru.otus.spring.hometask02.util.StudentsTestUtils.isNumeric;
 
-
+@Service
 public class QuestionsProcessorImpl implements QuestionsProcessor {
     private static final String DELIMITER = "**********".repeat(5);
     private static final String THRESHOLD_PROPERTY_NAME = "questions.threshold";
