@@ -17,6 +17,7 @@ import ru.otus.spring.hometask02.service.UserDataServiceImpl;
 
 @Configuration
 public class AppConfig {
+    private static final String SOURCE_PROPERTY_NAME = "questions.path";
 
     @Bean
     MessageSource messageSource() {
@@ -40,19 +41,19 @@ public class AppConfig {
 
 
     @Bean
-    ResourceFileDataLoader dataLoader(@Value("languages.csv") String questionsResource) {
+    ResourceFileDataLoader languagesDataLoader(@Value("languages.csv") String questionsResource) {
         return new ResourceFileDataLoader(questionsResource);
     }
 
     @Bean
-    LanguagesDataParser languagesDataParser(ResourceFileDataLoader dataLoader) {
-        return new LanguagesDataParser(dataLoader);
-    }
-
-
-    @Bean
     LanguagesServiceImpl languageService(IOService ioService, LanguagesDataParser languagesDataParser) {
         return new LanguagesServiceImpl(ioService, languagesDataParser);
+    }
+
+    @Bean
+    ResourceFileDataLoader questionsDataLoader(LanguagesService languagesService) {
+        languagesService.chooseLocale();
+        return new ResourceFileDataLoader(messageSource().getMessage(SOURCE_PROPERTY_NAME, null, languagesService.getChosenLocale()));
     }
 
     @Bean

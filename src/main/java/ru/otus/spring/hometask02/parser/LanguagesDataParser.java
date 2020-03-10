@@ -2,6 +2,8 @@ package ru.otus.spring.hometask02.parser;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.hometask02.loader.DataLoader;
 import ru.otus.spring.hometask02.util.StudentsTestException;
 
@@ -12,11 +14,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Service
 public class LanguagesDataParser implements DataParser {
 
     private final DataLoader dataLoader;
 
-    public LanguagesDataParser(DataLoader dataLoader) {
+    LanguagesDataParser(@Qualifier("languagesDataLoader") DataLoader dataLoader) {
         this.dataLoader = dataLoader;
     }
 

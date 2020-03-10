@@ -16,8 +16,4 @@ public class ResourceFileDataLoader implements DataLoader {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         return classloader.getResourceAsStream(questionsResource);
     }
-
-    public void setQuestionsResource(String questionsResource) {
-        this.questionsResource = questionsResource;
-    }
 }

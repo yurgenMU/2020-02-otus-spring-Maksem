@@ -3,12 +3,11 @@ package ru.otus.spring.hometask02.parser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.hometask02.domain.Question;
 import ru.otus.spring.hometask02.domain.TestData;
-import ru.otus.spring.hometask02.loader.ResourceFileDataLoader;
-import ru.otus.spring.hometask02.service.LanguagesService;
+import ru.otus.spring.hometask02.loader.DataLoader;
 import ru.otus.spring.hometask02.util.StudentsTestException;
 
 import java.io.InputStream;
@@ -20,24 +19,16 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class QuestionsDataParser implements DataParser {
-
-    private static final String SOURCE_PROPERTY_NAME = "questions.path";
     private static final String EMPTY = "";
 
+    private final DataLoader dataLoader;
 
-    private final ResourceFileDataLoader dataLoader;
-    private final LanguagesService languagesService;
-    private final MessageSource messageSource;
-
-    QuestionsDataParser(ResourceFileDataLoader dataLoader, LanguagesService languagesService, MessageSource messageSource) {
+    QuestionsDataParser(@Qualifier("questionsDataLoader") DataLoader dataLoader) {
         this.dataLoader = dataLoader;
-        this.languagesService = languagesService;
-        this.messageSource = messageSource;
     }
 
     @Override
     public TestData parseData() {
-        dataLoader.setQuestionsResource(messageSource.getMessage(SOURCE_PROPERTY_NAME, null, languagesService.getChosenLocale()));
         CSVFormat csvFormat = CSVFormat.EXCEL.withFirstRecordAsHeader();
         return retrieveTestData(dataLoader.loadData(), csvFormat);
     }
