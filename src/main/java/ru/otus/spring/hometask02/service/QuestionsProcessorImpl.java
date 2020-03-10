@@ -74,27 +74,34 @@ public class QuestionsProcessorImpl implements QuestionsProcessor {
 
     private boolean processResult(String name, String surname, double accuracy) {
         ioService.write(DELIMITER);
-        String thresholdValue = messageSource.getMessage(THRESHOLD_PROPERTY_NAME, null
-                , languagesService.getChosenLocale());
+        String thresholdValue = getRequiredMessage(THRESHOLD_PROPERTY_NAME);
         double threshold;
         if (isNumeric(thresholdValue)) {
             threshold = Double.parseDouble(thresholdValue);
         } else {
-            threshold = Double.parseDouble(messageSource.getMessage(THRESHOLD_PROPERTY_NAME,
-                    null, Locale.ENGLISH));
+            threshold = Double.parseDouble(getRequiredMessage(THRESHOLD_PROPERTY_NAME, Locale.getDefault()));
         }
         if (accuracy >= threshold) {
-            ioService.writeFormatted(messageSource.getMessage(SUCCESS_PROPERTY_NAME, null,
-                    languagesService.getChosenLocale()),
+            ioService.writeFormatted(getRequiredMessage(SUCCESS_PROPERTY_NAME),
                     name, surname, accuracy * 100, System.lineSeparator());
             return false;
         } else {
-            ioService.writeFormatted(messageSource.getMessage(FAILURE_PROPERTY_NAME, null,
-                    languagesService.getChosenLocale()),
+            ioService.writeFormatted(getRequiredMessage(FAILURE_PROPERTY_NAME),
                     name, surname, accuracy * 100, System.lineSeparator());
             String nextTry = ioService.read();
-            return nextTry.equalsIgnoreCase(messageSource.getMessage(CONFIRM_PROPERTY_NAME,
-                    null, languagesService.getChosenLocale()));
+            return nextTry.equalsIgnoreCase(getRequiredMessage(CONFIRM_PROPERTY_NAME));
         }
+    }
+
+
+    private String getRequiredMessage(String requirement, Locale... locale) {
+        Locale currentLocale;
+        if (locale.length == 0) {
+            currentLocale = languagesService.getChosenLocale();
+        } else {
+            currentLocale = locale[0];
+        }
+        return messageSource.getMessage(requirement,
+                null, currentLocale);
     }
 }
