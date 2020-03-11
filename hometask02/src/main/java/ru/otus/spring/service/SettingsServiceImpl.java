@@ -1,9 +1,10 @@
 
-package ru.otus.spring.hometask02.service;
+package ru.otus.spring.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.hometask02.io.IOService;
-import ru.otus.spring.hometask02.parser.LanguagesDataParser;
+import ru.otus.spring.io.IOService;
+import ru.otus.spring.parser.LanguagesDataParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +12,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static ru.otus.spring.hometask02.util.StudentsTestUtils.isNumeric;
+import static ru.otus.spring.util.StudentsTestUtils.isNumeric;
+
 
 @Service
-public class LanguagesServiceImpl implements LanguagesService {
+public class SettingsServiceImpl implements SettingsService {
 
     private final IOService ioService;
     private final LanguagesDataParser languagesDataParser;
     private Locale chosenLocale;
 
-    public LanguagesServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser) {
+    @Value("${questions.file.template}")
+    private String questionsPathTemplate;
+
+    @Value("${default.locale.language}")
+    private String defaultLocaleLanguage;
+
+    @Value("${default.locale.country}")
+    private String defaultLocaleCountry;
+
+    public SettingsServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser) {
         this.ioService = ioService;
         this.languagesDataParser = languagesDataParser;
     }
@@ -39,11 +50,16 @@ public class LanguagesServiceImpl implements LanguagesService {
                 return;
             }
         }
-        this.chosenLocale = Locale.getDefault();
+        this.chosenLocale = new Locale(defaultLocaleLanguage, defaultLocaleCountry);
     }
 
     @Override
     public Locale getChosenLocale() {
         return chosenLocale;
+    }
+
+    @Override
+    public String getQuestionsResource() {
+        return String.format(questionsPathTemplate, chosenLocale);
     }
 }

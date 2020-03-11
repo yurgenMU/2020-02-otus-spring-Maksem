@@ -1,6 +1,5 @@
 package ru.otus.spring.service;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.User;
 import ru.otus.spring.io.IOService;
@@ -11,13 +10,13 @@ public class UserDataServiceImpl implements UserDataService {
     private static final String SURNAME_PROPERTY = "questions.surname";
 
     private final IOService ioService;
-    private final LanguagesService languagesService;
-    private final MessageSource messageSource;
+    private final SettingsService settingsService;
+    private final LocalizationService localizationService;
 
-    public UserDataServiceImpl(IOService ioService, LanguagesService languagesService, MessageSource messageSource) {
+    public UserDataServiceImpl(IOService ioService, SettingsService settingsService, LocalizationService localizationService) {
         this.ioService = ioService;
-        this.languagesService = languagesService;
-        this.messageSource = messageSource;
+        this.settingsService = settingsService;
+        this.localizationService = localizationService;
     }
 
     @Override
@@ -26,17 +25,15 @@ public class UserDataServiceImpl implements UserDataService {
     }
 
     private String getFirstName() {
-        return doReadName(messageSource.getMessage(NAME_PROPERTY, null, languagesService.getChosenLocale()));
+        return doReadName(localizationService.getLocalizedMessage(NAME_PROPERTY, settingsService.getChosenLocale()));
     }
 
     private String getLastName() {
-        return doReadName(messageSource.getMessage(SURNAME_PROPERTY, null, languagesService.getChosenLocale()));
+        return doReadName(localizationService.getLocalizedMessage(SURNAME_PROPERTY, settingsService.getChosenLocale()));
     }
 
     private String doReadName(String query) {
         ioService.write(query);
         return ioService.read().trim();
     }
-
-
 }

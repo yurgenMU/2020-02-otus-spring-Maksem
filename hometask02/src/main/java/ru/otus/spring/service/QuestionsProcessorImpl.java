@@ -1,6 +1,6 @@
 package ru.otus.spring.service;
 
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.TestData;
@@ -9,7 +9,6 @@ import ru.otus.spring.util.StudentsTestException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.IntStream;
 
 import static ru.otus.spring.util.StudentsTestUtils.isNumeric;
@@ -18,20 +17,19 @@ import static ru.otus.spring.util.StudentsTestUtils.isNumeric;
 @Service
 public class QuestionsProcessorImpl implements QuestionsProcessor {
     private static final String DELIMITER = "**********".repeat(5);
-    private static final String THRESHOLD_PROPERTY_NAME = "questions.threshold";
     private static final String SUCCESS_PROPERTY_NAME = "questions.success";
     private static final String FAILURE_PROPERTY_NAME = "questions.failure";
     private static final String CONFIRM_PROPERTY_NAME = "questions.confirm";
 
+    @Value("${questions.threshold}")
+    private String thresholdValue;
 
     private final IOService ioService;
-    private final MessageSource messageSource;
-    private final LanguagesService languagesService;
+    private final LocalizationService localizationService;
 
-    public QuestionsProcessorImpl(IOService ioService, MessageSource messageSource, LanguagesService languagesService) {
+    public QuestionsProcessorImpl(IOService ioService, LocalizationService localizationService) {
         this.ioService = ioService;
-        this.messageSource = messageSource;
-        this.languagesService = languagesService;
+        this.localizationService = localizationService;
     }
 
     @Override
@@ -75,34 +73,21 @@ public class QuestionsProcessorImpl implements QuestionsProcessor {
 
     private boolean processResult(String name, String surname, double accuracy) {
         ioService.write(DELIMITER);
-        String thresholdValue = getRequiredMessage(THRESHOLD_PROPERTY_NAME);
         double threshold;
         if (isNumeric(thresholdValue)) {
             threshold = Double.parseDouble(thresholdValue);
         } else {
-            threshold = Double.parseDouble(getRequiredMessage(THRESHOLD_PROPERTY_NAME, Locale.getDefault()));
+            throw new StudentsTestException("Invalid format of threshold value!");
         }
         if (accuracy >= threshold) {
-            ioService.writeFormatted(getRequiredMessage(SUCCESS_PROPERTY_NAME),
+            ioService.writeFormatted(localizationService.getLocalizedMessage(SUCCESS_PROPERTY_NAME),
                     name, surname, accuracy * 100, System.lineSeparator());
             return false;
         } else {
-            ioService.writeFormatted(getRequiredMessage(FAILURE_PROPERTY_NAME),
+            ioService.writeFormatted(localizationService.getLocalizedMessage(FAILURE_PROPERTY_NAME),
                     name, surname, accuracy * 100, System.lineSeparator());
             String nextTry = ioService.read();
-            return nextTry.equalsIgnoreCase(getRequiredMessage(CONFIRM_PROPERTY_NAME));
+            return nextTry.equalsIgnoreCase(localizationService.getLocalizedMessage(CONFIRM_PROPERTY_NAME));
         }
-    }
-
-
-    private String getRequiredMessage(String requirement, Locale... locale) {
-        Locale currentLocale;
-        if (locale.length == 0) {
-            currentLocale = languagesService.getChosenLocale();
-        } else {
-            currentLocale = locale[0];
-        }
-        return messageSource.getMessage(requirement,
-                null, currentLocale);
     }
 }

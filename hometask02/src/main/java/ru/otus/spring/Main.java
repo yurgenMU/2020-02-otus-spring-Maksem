@@ -7,13 +7,9 @@ import ru.otus.spring.executor.StudentsTestExecutor;
 @ComponentScan
 public class Main {
 
-
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.register(Main.class);
-        context.refresh();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         StudentsTestExecutor testExecutor = context.getBean(StudentsTestExecutor.class);
         testExecutor.execute();
     }
-
 }
