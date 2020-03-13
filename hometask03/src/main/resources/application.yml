@@ -1,0 +1,5 @@
+application:
+  message: "Test Props msg"
+
+messager:
+  message: "Hello from Messager"
