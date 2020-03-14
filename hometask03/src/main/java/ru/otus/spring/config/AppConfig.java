@@ -1,5 +1,6 @@
 package ru.otus.spring.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,15 +14,12 @@ import ru.otus.spring.io.IOServiceImpl;
 import ru.otus.spring.loader.ResourceFileDataLoader;
 import ru.otus.spring.service.SettingsService;
 
-@PropertySource("classpath:application.properties")
 
 @Configuration
-@EnableConfigurationProperties(YamlProps.class)
+@EnableConfigurationProperties(Props.class)
 public class AppConfig {
-    private static final String SOURCE_PROPERTY_NAME = "questions.path";
 
     @Bean
-    @ConditionalOnMissingBean
     MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource
                 = new ReloadableResourceBundleMessageSource();
@@ -31,19 +29,16 @@ public class AppConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean
     IOService ioService() {
         return new IOServiceImpl(System.in, System.out);
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    ResourceFileDataLoader languagesDataLoader(@Value("${languages.file}") String questionsResource) {
-        return new ResourceFileDataLoader(questionsResource);
+    ResourceFileDataLoader languagesDataLoader(Props props) {
+        return new ResourceFileDataLoader(props.getLanguagesFile());
     }
 
     @Bean
-    @ConditionalOnMissingBean
     ResourceFileDataLoader questionsDataLoader(SettingsService settingsService) {
         return new ResourceFileDataLoader(settingsService);
     }

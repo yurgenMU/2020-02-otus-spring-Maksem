@@ -1,7 +1,7 @@
 package ru.otus.spring.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.config.Props;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.TestData;
 import ru.otus.spring.io.IOService;
@@ -21,15 +21,15 @@ public class QuestionsProcessorImpl implements QuestionsProcessor {
     private static final String FAILURE_PROPERTY_NAME = "questions.failure";
     private static final String CONFIRM_PROPERTY_NAME = "questions.confirm";
 
-    @Value("${questions.threshold}")
-    private String thresholdValue;
+    private final String thresholdValue;
 
     private final IOService ioService;
     private final LocalizationService localizationService;
 
-    public QuestionsProcessorImpl(IOService ioService, LocalizationService localizationService) {
+    public QuestionsProcessorImpl(IOService ioService, LocalizationService localizationService, Props props) {
         this.ioService = ioService;
         this.localizationService = localizationService;
+        this.thresholdValue = props.getQuestionsFileThreshold();
     }
 
     @Override

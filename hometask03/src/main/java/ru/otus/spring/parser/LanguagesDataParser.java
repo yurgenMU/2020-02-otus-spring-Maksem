@@ -3,7 +3,6 @@ package ru.otus.spring.parser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.loader.DataLoader;
 import ru.otus.spring.util.StudentsTestException;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-@ConditionalOnMissingBean
 public class LanguagesDataParser implements DataParser {
 
     private final DataLoader dataLoader;

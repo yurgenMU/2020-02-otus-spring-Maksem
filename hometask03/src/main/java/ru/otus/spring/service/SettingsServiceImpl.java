@@ -1,8 +1,8 @@
 
 package ru.otus.spring.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.config.Props;
 import ru.otus.spring.io.IOService;
 import ru.otus.spring.parser.LanguagesDataParser;
 
@@ -22,22 +22,23 @@ public class SettingsServiceImpl implements SettingsService {
     private final LanguagesDataParser languagesDataParser;
     private Locale chosenLocale;
 
-    @Value("${questions.file.template}")
-    private String questionsPathTemplate;
+    private final String questionsPathTemplate;
 
-    @Value("${default.locale.language}")
-    private String defaultLocaleLanguage;
+    private final String defaultLocaleLanguage;
 
-    @Value("${default.locale.country}")
-    private String defaultLocaleCountry;
+    private final  String defaultLocaleCountry;
 
-    public SettingsServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser) {
+    public SettingsServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser, Props props) {
         this.ioService = ioService;
         this.languagesDataParser = languagesDataParser;
+        this.questionsPathTemplate = props.getQuestionsFileTemplate();
+        this.defaultLocaleLanguage = props.getDefaultLocaleLanguage();
+        this.defaultLocaleCountry = props.getDefaultLocaleCountry();
     }
 
     @Override
     public void chooseLocale() {
+
         Map<String, Locale> locales = languagesDataParser.parseData();
         List<String> languages = new ArrayList<>(locales.keySet());
         IntStream.range(0, languages.size())
