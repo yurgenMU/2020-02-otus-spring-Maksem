@@ -1,7 +1,5 @@
-
 package ru.otus.spring.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.io.IOService;
 import ru.otus.spring.parser.LanguagesDataParser;
@@ -14,26 +12,19 @@ import java.util.stream.IntStream;
 
 import static ru.otus.spring.util.StudentsTestUtils.isNumeric;
 
-
 @Service
-public class SettingsServiceImpl implements SettingsService {
+public class LanguagesServiceImpl implements LanguagesService {
 
     private final IOService ioService;
     private final LanguagesDataParser languagesDataParser;
+    private final SettingsComponent settingsComponent;
     private Locale chosenLocale;
 
-    @Value("${questions.file.template}")
-    private String questionsPathTemplate;
-
-    @Value("${default.locale.language}")
-    private String defaultLocaleLanguage;
-
-    @Value("${default.locale.country}")
-    private String defaultLocaleCountry;
-
-    public SettingsServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser) {
+    public LanguagesServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser,
+                                SettingsComponent settingsComponent) {
         this.ioService = ioService;
         this.languagesDataParser = languagesDataParser;
+        this.settingsComponent = settingsComponent;
     }
 
     @Override
@@ -50,6 +41,8 @@ public class SettingsServiceImpl implements SettingsService {
                 return;
             }
         }
+        String defaultLocaleLanguage = settingsComponent.getDefaultLocaleLanguage();
+        String defaultLocaleCountry = settingsComponent.getDefaultLocaleCountry();
         this.chosenLocale = new Locale(defaultLocaleLanguage, defaultLocaleCountry);
     }
 
@@ -60,6 +53,6 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public String getQuestionsResource() {
-        return String.format(questionsPathTemplate, chosenLocale);
+        return String.format(settingsComponent.getQuestionsPathTemplate(), chosenLocale);
     }
 }
