@@ -1,0 +1,17 @@
+application:
+
+  languagesFile: languages.csv
+
+  questionsFileTemplate: questions_%s.csv
+
+  questionsFileThreshold: 0.6
+
+  defaultLocaleLanguage: en
+
+  defaultLocaleCountry: US
+
+
+message: "Test Props msg"
+
+messager:
+  message: "Hello from Messager"
