@@ -9,7 +9,7 @@ import java.io.InputStream;
 @Service
 public class LanguagesDataLoader implements DataLoader {
 
-    private String languagesResource;
+    private final String languagesResource;
 
     public LanguagesDataLoader(@Value("${languages.file}") String languagesResource) {
         this.languagesResource = languagesResource;
