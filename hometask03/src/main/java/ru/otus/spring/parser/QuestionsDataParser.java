@@ -3,8 +3,6 @@ package ru.otus.spring.parser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.TestData;
@@ -22,16 +20,16 @@ import java.util.stream.StreamSupport;
 public class QuestionsDataParser implements DataParser {
     private static final String EMPTY = "";
 
-    private final DataLoader dataLoader;
+    private final DataLoader questionsDataLoader;
 
-    QuestionsDataParser(@Qualifier("questionsDataLoader") DataLoader dataLoader) {
-        this.dataLoader = dataLoader;
+    QuestionsDataParser(DataLoader questionsDataLoader) {
+        this.questionsDataLoader = questionsDataLoader;
     }
 
     @Override
     public TestData parseData() {
         CSVFormat csvFormat = CSVFormat.EXCEL.withFirstRecordAsHeader();
-        return retrieveTestData(dataLoader.loadData(), csvFormat);
+        return retrieveTestData(questionsDataLoader.loadData(), csvFormat);
     }
 
 

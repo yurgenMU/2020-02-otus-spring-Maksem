@@ -1,4 +1,3 @@
-
 package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
@@ -14,26 +13,18 @@ import java.util.stream.IntStream;
 
 import static ru.otus.spring.util.StudentsTestUtils.isNumeric;
 
-
 @Service
-public class SettingsServiceImpl implements SettingsService {
+public class LanguagesServiceImpl implements LanguagesService {
 
     private final IOService ioService;
     private final LanguagesDataParser languagesDataParser;
     private Locale chosenLocale;
+    private Props props;
 
-    private final String questionsPathTemplate;
-
-    private final String defaultLocaleLanguage;
-
-    private final  String defaultLocaleCountry;
-
-    public SettingsServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser, Props props) {
+    public LanguagesServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser, Props props) {
         this.ioService = ioService;
         this.languagesDataParser = languagesDataParser;
-        this.questionsPathTemplate = props.getQuestionsFileTemplate();
-        this.defaultLocaleLanguage = props.getDefaultLocaleLanguage();
-        this.defaultLocaleCountry = props.getDefaultLocaleCountry();
+        this.props = props;
     }
 
     @Override
@@ -51,7 +42,7 @@ public class SettingsServiceImpl implements SettingsService {
                 return;
             }
         }
-        this.chosenLocale = new Locale(defaultLocaleLanguage, defaultLocaleCountry);
+        this.chosenLocale = new Locale(props.getDefaultLocaleLanguage(), props.getDefaultLocaleCountry());
     }
 
     @Override
@@ -61,6 +52,6 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public String getQuestionsResource() {
-        return String.format(questionsPathTemplate, chosenLocale);
+        return String.format(props.getQuestionsFileTemplate(), chosenLocale);
     }
 }

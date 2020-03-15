@@ -10,12 +10,10 @@ public class UserDataServiceImpl implements UserDataService {
     private static final String SURNAME_PROPERTY = "questions.surname";
 
     private final IOService ioService;
-    private final SettingsService settingsService;
     private final LocalizationService localizationService;
 
-    public UserDataServiceImpl(IOService ioService, SettingsService settingsService, LocalizationService localizationService) {
+    public UserDataServiceImpl(IOService ioService, LocalizationService localizationService) {
         this.ioService = ioService;
-        this.settingsService = settingsService;
         this.localizationService = localizationService;
     }
 
@@ -25,11 +23,11 @@ public class UserDataServiceImpl implements UserDataService {
     }
 
     private String getFirstName() {
-        return doReadName(localizationService.getLocalizedMessage(NAME_PROPERTY, settingsService.getChosenLocale()));
+        return doReadName(localizationService.getLocalizedMessage(NAME_PROPERTY));
     }
 
     private String getLastName() {
-        return doReadName(localizationService.getLocalizedMessage(SURNAME_PROPERTY, settingsService.getChosenLocale()));
+        return doReadName(localizationService.getLocalizedMessage(SURNAME_PROPERTY));
     }
 
     private String doReadName(String query) {
