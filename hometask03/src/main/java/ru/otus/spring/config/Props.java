@@ -2,14 +2,18 @@ package ru.otus.spring.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Locale;
+
 @ConfigurationProperties(prefix = "application")
 public class Props {
 
-    String languagesFile;
-    String questionsFileTemplate;
-    String questionsFileThreshold;
-    String defaultLocaleLanguage;
-    String defaultLocaleCountry;
+    private String languagesFile;
+    private String questionsFileTemplate;
+    private Locale chosenLocale;
+    private String questionsFileThreshold;
+    private String defaultLocaleLanguage;
+    private String defaultLocaleCountry;
+
 
     public String getLanguagesFile() {
         return languagesFile;
@@ -51,4 +55,11 @@ public class Props {
         this.defaultLocaleCountry = defaultLocaleCountry;
     }
 
+    public Locale getChosenLocale() {
+        return chosenLocale;
+    }
+
+    public void setChosenLocale(Locale chosenLocale) {
+        this.chosenLocale = chosenLocale;
+    }
 }

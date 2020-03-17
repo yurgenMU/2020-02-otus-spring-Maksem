@@ -1,5 +1,5 @@
 package ru.otus.spring.parser;
 
-public interface DataParser {
-    Object parseData();
+public interface DataParser<T> {
+    T parseData();
 }

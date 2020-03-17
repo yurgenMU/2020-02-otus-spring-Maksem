@@ -18,7 +18,7 @@ public class LanguagesDataParser implements DataParser {
 
     private final DataLoader languagesDataLoader;
 
-    LanguagesDataParser(DataLoader languagesDataLoader) {
+    public LanguagesDataParser(DataLoader languagesDataLoader) {
         this.languagesDataLoader = languagesDataLoader;
     }
 

@@ -18,7 +18,6 @@ public class LanguagesServiceImpl implements LanguagesService {
 
     private final IOService ioService;
     private final LanguagesDataParser languagesDataParser;
-    private Locale chosenLocale;
     private Props props;
 
     public LanguagesServiceImpl(IOService ioService, LanguagesDataParser languagesDataParser, Props props) {
@@ -38,20 +37,10 @@ public class LanguagesServiceImpl implements LanguagesService {
         if (isNumeric(chosenCandidate)) {
             int chosenNumber = Integer.parseInt(chosenCandidate);
             if (chosenNumber >= 1 && chosenNumber <= languages.size()) {
-                this.chosenLocale = locales.get(languages.get(chosenNumber - 1));
+                props.setChosenLocale(locales.get(languages.get(chosenNumber - 1)));
                 return;
             }
         }
-        this.chosenLocale = new Locale(props.getDefaultLocaleLanguage(), props.getDefaultLocaleCountry());
-    }
-
-    @Override
-    public Locale getChosenLocale() {
-        return chosenLocale;
-    }
-
-    @Override
-    public String getQuestionsResource() {
-        return String.format(props.getQuestionsFileTemplate(), chosenLocale);
+        props.setChosenLocale(new Locale(props.getDefaultLocaleLanguage(), props.getDefaultLocaleCountry()));
     }
 }

@@ -1,27 +1,28 @@
 package ru.otus.spring.loader;
 
 import org.springframework.stereotype.Service;
-import ru.otus.spring.service.LanguagesService;
-import ru.otus.spring.util.StudentsTestException;
+import ru.otus.spring.config.Props;
 import ru.otus.spring.util.StudentsTestUtils;
 
 import java.io.InputStream;
+import java.util.Locale;
 
 @Service
 public class QuestionsDataLoader implements DataLoader {
 
-    private final LanguagesService languagesService;
+    private final Props props;
 
-    public QuestionsDataLoader(LanguagesService languagesService) {
-        this.languagesService = languagesService;
+    public QuestionsDataLoader(Props props) {
+        this.props = props;
     }
 
     @Override
     public InputStream loadData() {
-        String questionsResource = languagesService.getQuestionsResource();
-        if (questionsResource == null) {
-            throw new StudentsTestException("Required resource is empty");
-        }
+        String questionsFileTemplate = props.getQuestionsFileTemplate();
+        Locale chosenLocale = props.getChosenLocale();
+        String questionsResource =
+                String.format(questionsFileTemplate, chosenLocale);
+
         return StudentsTestUtils.loadResource(questionsResource);
     }
 }
