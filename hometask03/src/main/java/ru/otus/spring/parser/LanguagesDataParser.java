@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class LanguagesDataParser implements DataParser {
+public class LanguagesDataParser implements DataParser<Map<String, Locale>> {
 
     private final DataLoader languagesDataLoader;
 

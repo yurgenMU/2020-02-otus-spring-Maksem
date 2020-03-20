@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 @Service
-public class QuestionsDataParser implements DataParser {
+public class QuestionsDataParser implements DataParser<TestData> {
     private static final String EMPTY = "";
 
     private final DataLoader questionsDataLoader;
