@@ -1,0 +1,12 @@
+spring:
+  messages:
+    basename: i18n/bundle
+    encoding: UTF-8
+
+application:
+
+  languagesFile: languages.csv
+
+  defaultLocaleLanguage: en
+
+  defaultLocaleCountry: US
