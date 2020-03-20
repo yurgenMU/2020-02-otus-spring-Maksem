@@ -1,0 +1,17 @@
+spring:
+  messages:
+    basename: i18n/bundle
+    encoding: UTF-8
+
+
+application:
+
+  languagesFile: languages.csv
+
+  questionsFileTemplate: questions_%s.csv
+
+  questionsFileThreshold: 0.6
+
+  defaultLocaleLanguage: en
+
+  defaultLocaleCountry: US
