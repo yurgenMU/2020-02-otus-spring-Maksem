@@ -86,8 +86,12 @@ public class BookDaoImpl implements BookDao {
     @Override
     public void deleteByName(String name) {
         Map<String, Object> params = Collections.singletonMap("name", name);
+        Book book = getByName(name);
         jdbcOperations.update(
                 "delete from books where name = :name", params);
+        Map<String, Object> bookParams = Collections.singletonMap("id", book.getId());
+        jdbcOperations.update(
+                "delete from genres_books where book_id = :id", bookParams);
     }
 
     @Override
@@ -95,6 +99,9 @@ public class BookDaoImpl implements BookDao {
         Map<String, Object> params = Collections.singletonMap("id", id);
         jdbcOperations.update(
                 "delete from books where id = :id", params);
+        Map<String, Object> bookParams = Collections.singletonMap("id", id);
+        jdbcOperations.update(
+                "delete from genres_books where book_id = :id", bookParams);
     }
 
     @Override

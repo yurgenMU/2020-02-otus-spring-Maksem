@@ -89,7 +89,7 @@ public class AuthorDaoImpl implements AuthorDao {
                 "select b.id, b.name, g.id as genre_id, g.name as genre from books b " +
                         "inner join authors a on b.author_id = a.id " +
                         "right join genres_books gb on gb.book_id = b.id " +
-                        "inner join genres g on g.id = gb.genre_id where a.id=1 or a.name =: name;", parameterSource,
+                        "inner join genres g on g.id = gb.genre_id where a.id = :id or a.name = :name;", parameterSource,
                 new AuthorBooksResultSetExtractor());
     }
 

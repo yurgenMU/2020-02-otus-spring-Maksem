@@ -54,17 +54,6 @@ public class BookServiceImpl implements BookService {
         bookDao.update(new Book(book.getId(), name, author, genresList));
     }
 
-    private Book retrieveBook(String bookIdentifier) {
-        Book book;
-        if (isNumeric(bookIdentifier)) {
-            int bookId = Integer.parseInt(bookIdentifier);
-            book = bookDao.getById(bookId);
-        } else {
-            book = bookDao.getByName(bookIdentifier);
-        }
-        return book;
-    }
-
     @Override
     public void removeBook(String identifier) {
         if (isNumeric(identifier)) {
@@ -78,6 +67,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getAllBooks() {
         return bookDao.getAll();
+    }
+
+    private Book retrieveBook(String bookIdentifier) {
+        Book book;
+        if (isNumeric(bookIdentifier)) {
+            int bookId = Integer.parseInt(bookIdentifier);
+            book = bookDao.getById(bookId);
+        } else {
+            book = bookDao.getByName(bookIdentifier);
+        }
+        return book;
     }
 
     private Author retrieveAuthor(String authorIdentifier) {
