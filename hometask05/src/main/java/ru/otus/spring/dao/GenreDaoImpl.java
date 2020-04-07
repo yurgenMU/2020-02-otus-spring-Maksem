@@ -7,8 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.otus.spring.dao.ext.GenresBooksResultSetExtractor;
-import ru.otus.spring.domain.Book;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.domain.Genre;
 
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@Transactional
 public class GenreDaoImpl implements GenreDao {
 
     private final NamedParameterJdbcOperations jdbcOperations;

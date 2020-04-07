@@ -7,9 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.otus.spring.dao.ext.AuthorBooksResultSetExtractor;
 import ru.otus.spring.domain.Author;
-import ru.otus.spring.domain.Book;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
