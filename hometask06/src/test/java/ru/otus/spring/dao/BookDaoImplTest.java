@@ -30,16 +30,15 @@ public class BookDaoImplTest {
     @Autowired
     private BookDaoImpl bookDao;
 
-//    @Test
-//    void successful_retrieval_by_id_test() {
-//        Book book = bookDao.getById(1L);
-//        Book expectedBook = em.find(Book.class, 1L);
-//        assertEquals("Requiem to PQ-17", book.getName());
-//        assertEquals("Valentin Pikul", book.getAuthor().getName());
-//        List<Genre> genres = book.getGenres();
-//        assertEquals(2, genres.size());
-//        assertEquals("Historical books", genres.get(0).getName());
-//    }
+    @Test
+    void successful_retrieval_by_id_test() {
+        Book book = bookDao.getById(1L);
+        assertEquals("Requiem to PQ-17", book.getName());
+        assertEquals("Valentin Pikul", book.getAuthor().getName());
+        List<Genre> genres = book.getGenres();
+        assertEquals(2, genres.size());
+        assertEquals("Historical books", genres.get(0).getName());
+    }
 
     @Test
     void successful_addition_test() {
@@ -79,24 +78,25 @@ public class BookDaoImplTest {
 
     @Test
     void successful_update_test2() {
-        Book book1 = bookDao.getById(1L);
+        Book book2 = bookDao.getById(2L);
+        Book toUpdate = new Book(2L, "newName", book2.getAuthor(), book2.getGenres());
 
-        Book toUpdate = new Book(1L, "newName", book1.getAuthor(), book1.getGenres());
-        toUpdate.getGenres().add(new Genre(1L, "Military books"));
+        Genre genre = new Genre(2L, "Military books");
+        toUpdate.getGenres().add(genre);
         bookDao.update(toUpdate);
 
-        Book updated = bookDao.getById(1);
+        Book updated = bookDao.getById(2);
         assertThat(updated).usingRecursiveComparison().isEqualTo(toUpdate);
     }
 
     @Test
     void successful_update_test3() {
-        Book book0 = bookDao.getById(0);
-        Book book1 = bookDao.getById(1);
+        Book book0 = bookDao.getById(1);
+        Book book1 = bookDao.getById(2);
 
-        bookDao.update(new Book(1L, "newName", book1.getAuthor(), book1.getGenres()));
+        bookDao.update(new Book(2L, "newName", book1.getAuthor(), book1.getGenres()));
 
-        Book book0AfterUpdate = bookDao.getById(0);
+        Book book0AfterUpdate = bookDao.getById(1);
         assertThat(book0AfterUpdate).usingRecursiveComparison().isEqualTo(book0);
     }
 
