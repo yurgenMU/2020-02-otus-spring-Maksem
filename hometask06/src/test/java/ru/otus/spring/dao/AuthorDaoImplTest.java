@@ -11,7 +11,7 @@ import ru.otus.spring.domain.Author;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@DisplayName("Hibernate-based repository for genres processing")
+@DisplayName("Hibernate-based repository for authors processing")
 @DataJpaTest
 @Import(AuthorDaoImpl.class)
 public class AuthorDaoImplTest {

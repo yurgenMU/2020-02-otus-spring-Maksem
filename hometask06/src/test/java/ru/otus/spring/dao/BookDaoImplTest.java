@@ -19,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
-@DisplayName("Hibernate-based repository for genres processing")
+@DisplayName("Hibernate-based repository for books processing")
 @DataJpaTest
 @Import(BookDaoImpl.class)
 public class BookDaoImplTest {
