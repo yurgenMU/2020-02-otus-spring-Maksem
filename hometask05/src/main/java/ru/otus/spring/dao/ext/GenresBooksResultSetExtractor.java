@@ -12,11 +12,11 @@ import java.util.*;
 public class GenresBooksResultSetExtractor implements ResultSetExtractor<List<Book>> {
     @Override
     public List<Book> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<Integer, Book> books = new HashMap<>();
+        Map<Long, Book> books = new HashMap<>();
         while (rs.next()) {
-            int id = rs.getInt("book_id");
+            long id = rs.getLong("book_id");
             String name = rs.getString("book");
-            int authorId = rs.getInt("author_id");
+            long authorId = rs.getLong("author_id");
             String author = rs.getString("author");
             Book book = new Book(id, name, new Author(authorId, author), Collections.emptyList());
             books.put(id, book);

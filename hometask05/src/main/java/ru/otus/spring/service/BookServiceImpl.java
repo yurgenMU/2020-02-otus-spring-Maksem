@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.otus.spring.util.LibraryUtils.isNumeric;
+import static ru.otus.spring.util.LibraryUtils.processEntity;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -57,7 +58,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void removeBook(String identifier) {
         if (isNumeric(identifier)) {
-            int id = Integer.parseInt(identifier);
+            long id = Long.parseLong(identifier);
             bookDao.deleteById(id);
         } else {
             bookDao.deleteByName(identifier);
@@ -70,24 +71,11 @@ public class BookServiceImpl implements BookService {
     }
 
     private Book retrieveBook(String bookIdentifier) {
-        Book book;
-        if (isNumeric(bookIdentifier)) {
-            int bookId = Integer.parseInt(bookIdentifier);
-            book = bookDao.getById(bookId);
-        } else {
-            book = bookDao.getByName(bookIdentifier);
-        }
-        return book;
+        return processEntity(bookIdentifier, bookDao::getById, bookDao::getByName);
     }
 
     private Author retrieveAuthor(String authorIdentifier) {
-        Author author;
-        if (isNumeric(authorIdentifier)) {
-            int authorId = Integer.parseInt(authorIdentifier);
-            author = authorDao.getById(authorId);
-        } else {
-            author = authorDao.getByName(authorIdentifier);
-        }
+        Author author = processEntity(authorIdentifier, authorDao::getById, authorDao::getByName);
         if (isNull(author)) {
             throw new LibraryException("Author with this identifier does not exist in library");
         }
@@ -96,13 +84,7 @@ public class BookServiceImpl implements BookService {
 
     private List<Genre> retrieveGenres(List<String> genres) {
         return genres.stream().map(genreIdentifier -> {
-            Genre genre;
-            if (isNumeric(genreIdentifier)) {
-                int genreId = Integer.parseInt(genreIdentifier);
-                genre = genreDao.getById(genreId);
-            } else {
-                genre = genreDao.getByName(genreIdentifier);
-            }
+            Genre genre = processEntity(genreIdentifier, genreDao::getById, genreDao::getByName);
             if (isNull(genre)) {
                 throw new LibraryException("Genre with this identifier does not exist in library");
             }

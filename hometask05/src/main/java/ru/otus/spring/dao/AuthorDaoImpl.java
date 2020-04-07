@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Objects.nonNull;
 
 @Repository
 public class AuthorDaoImpl implements AuthorDao {
@@ -38,7 +37,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public Author getById(int id) {
+    public Author getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return jdbcOperations.queryForObject(
                 "select * from authors where id = :id", params, new AuthorMapper());
@@ -62,16 +61,17 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void deleteByName(String name) {
-        Map<String, Object> params = Collections.singletonMap("name", name);
-        jdbcOperations.update(
-                "delete from authors where name = :name", params);
+        Author author = getByName(name);
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("authorId", author.getId())
+                .addValue("name", author.getName());
+        jdbcOperations.update("delete from authors where name = :name", parameterSource);
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        jdbcOperations.update(
-                "delete from authors where id = :id", params);
+        jdbcOperations.update("delete from authors where id = :id", params);
     }
 
     @Override
@@ -80,24 +80,11 @@ public class AuthorDaoImpl implements AuthorDao {
                 "select * from authors", new AuthorMapper());
     }
 
-    @Override
-    public List<Book> getBooksByAuthor(Author author) {
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", author.getId())
-                .addValue("name", author.getName());
-        return jdbcOperations.query(
-                "select b.id, b.name, g.id as genre_id, g.name as genre from books b " +
-                        "inner join authors a on b.author_id = a.id " +
-                        "right join genres_books gb on gb.book_id = b.id " +
-                        "inner join genres g on g.id = gb.genre_id where a.id = :id or a.name = :name;", parameterSource,
-                new AuthorBooksResultSetExtractor());
-    }
-
     private static class AuthorMapper implements RowMapper<Author> {
 
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
-            int id = resultSet.getInt("id");
+            long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
             return new Author(id, name);
         }

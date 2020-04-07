@@ -2,6 +2,7 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.AuthorDao;
+import ru.otus.spring.dao.BookDao;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.domain.Book;
 
@@ -14,9 +15,11 @@ import static ru.otus.spring.util.LibraryUtils.isNumeric;
 public class AuthorServiceImpl implements AuthorService{
 
     private final AuthorDao authorDao;
+    private final BookDao bookDao;
 
-    public AuthorServiceImpl(AuthorDao authorDao) {
+    public AuthorServiceImpl(AuthorDao authorDao, BookDao bookDao) {
         this.authorDao = authorDao;
+        this.bookDao = bookDao;
     }
 
     @Override
@@ -26,9 +29,9 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public void editAuthor(String identifier, String newName) {
-        Integer id;
+        Long id;
         if (isNumeric(identifier)) {
-            id = Integer.parseInt(identifier);
+            id = Long.parseLong(identifier);
             authorDao.update(new Author(id, newName));
         } else {
             Author author = authorDao.getByName(identifier);
@@ -43,12 +46,12 @@ public class AuthorServiceImpl implements AuthorService{
     public List<Book> getAllBooksForAuthor(String identifier) {
         Author author;
         if (isNumeric(identifier)) {
-            int id = Integer.parseInt(identifier);
+            long id = Long.parseLong(identifier);
             author = new Author(id, null);
         } else {
             author = new Author(null, identifier);
         }
-        return authorDao.getBooksByAuthor(author);
+        return bookDao.getBooksByAuthor(author);
     }
 
     @Override

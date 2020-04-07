@@ -35,7 +35,7 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public Genre getById(int id) {
+    public Genre getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return jdbcOperations.queryForObject(
                 "select * from genres where id = :id", params, new GenreMapper());
@@ -48,17 +48,6 @@ public class GenreDaoImpl implements GenreDao {
                 "select * from genres where name = :name", params, new GenreMapper());
     }
 
-    @Override
-    public List<Book> getBooksByGenre(Genre genre) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("id", genre.getId())
-                .addValue("name", genre.getName());
-        return jdbcOperations.query("select distinct b.id as book_id, b.name as book, a.id as author_id, a.name as author " +
-                        "from genres g inner join genres_books gb on g.id = gb.genre_id " +
-                        "inner join books b on gb.book_id = b.id " +
-                        "inner join authors a on a.id = b.author_id where g.id = :id or g.name = :name", mapSqlParameterSource,
-                new GenresBooksResultSetExtractor());
-    }
 
     @Override
     public void update(Genre genre) {
@@ -70,16 +59,21 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public void deleteByName(String name) {
-        Map<String, Object> params = Collections.singletonMap("name", name);
+        Genre genre = getByName(name);
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("id", genre.getId())
+                .addValue("name", genre.getName());
         jdbcOperations.update(
-                "delete from genres where name = :name", params);
+                "delete from genres_books where genre_id = :id;" +
+                        "delete from genres where name = :name", parameterSource);
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         jdbcOperations.update(
-                "delete from genres where id = :id", params);
+                "delete from genres_books where genre_id = :id;" +
+                        "delete from genres where id = :id", params);
     }
 
     @Override
@@ -92,7 +86,7 @@ public class GenreDaoImpl implements GenreDao {
 
         @Override
         public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
-            int id = resultSet.getInt("id");
+            long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
             return new Genre(id, name);
         }

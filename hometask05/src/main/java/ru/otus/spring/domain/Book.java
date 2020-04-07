@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Book {
 
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final Author author;
     private final List<Genre> genres;
 
-    public Book(Integer id, String name, Author author, List<Genre> genres) {
+    public Book(Long id, String name, Author author, List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.author = author;
         this.genres = genres;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

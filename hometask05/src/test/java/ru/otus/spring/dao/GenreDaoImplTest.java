@@ -26,7 +26,7 @@ public class GenreDaoImplTest {
 
     @Test
     void successful_retrieval_by_id_test() {
-        Genre genre = genreDao.getById(0);
+        Genre genre = genreDao.getById(1);
         assertEquals("Historical books", genre.getName());
     }
 
@@ -39,7 +39,7 @@ public class GenreDaoImplTest {
     void successful_addition_test() {
         Genre genre = new Genre(null, FANTASY_GENRE);
         genreDao.insert(genre);
-        Genre actualGenre = genreDao.getById(2);
+        Genre actualGenre = genreDao.getById(3);
         assertEquals(FANTASY_GENRE, actualGenre.getName());
     }
 
@@ -57,16 +57,9 @@ public class GenreDaoImplTest {
 
     @Test
     void successful_update_test() {
-        Genre genre = new Genre(1, FANTASY_GENRE);
+        Genre genre = new Genre(1L, FANTASY_GENRE);
         genreDao.update(genre);
-        assertEquals(1, (int) genreDao.getByName(FANTASY_GENRE).getId());
+        assertEquals(1, (long) genreDao.getByName(FANTASY_GENRE).getId());
     }
 
-    @Test
-    void successful_books_by_genre_retrieval_test() {
-        Genre genre = new Genre(1, null);
-        List<Book> booksByGenre = genreDao.getBooksByGenre(genre);
-        assertEquals(1, booksByGenre.size());
-        assertEquals("Requiem to PQ-17", booksByGenre.get(0).getName());
-    }
 }

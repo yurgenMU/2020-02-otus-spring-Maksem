@@ -9,7 +9,7 @@ public interface AuthorDao {
 
     void insert(Author author);
 
-    Author getById(int id);
+    Author getById(long id);
 
     Author getByName(String name);
 
@@ -17,9 +17,8 @@ public interface AuthorDao {
 
     void deleteByName(String name);
 
-    void deleteById(int id);
+    void deleteById(long id);
 
     List<Author> getAll();
 
-    List<Book> getBooksByAuthor(Author author);
 }

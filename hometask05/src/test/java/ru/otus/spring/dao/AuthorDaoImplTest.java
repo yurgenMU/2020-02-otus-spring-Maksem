@@ -26,7 +26,7 @@ public class AuthorDaoImplTest {
 
     @Test
     void successful_retrieval_by_id_test() {
-        Author author = authorDao.getById(0);
+        Author author = authorDao.getById(1);
         assertEquals("Nikolai Karamzin", author.getName());
     }
 
@@ -39,7 +39,7 @@ public class AuthorDaoImplTest {
     void successful_addition_test() {
         Author author = new Author(null, PUSHKIN);
         authorDao.insert(author);
-        Author actualAuthor = authorDao.getById(2);
+        Author actualAuthor = authorDao.getById(3);
         assertEquals(PUSHKIN, actualAuthor.getName());
     }
 
@@ -57,16 +57,9 @@ public class AuthorDaoImplTest {
 
     @Test
     void successful_update_test() {
-        Author author = new Author(1, PUSHKIN);
+        Author author = new Author(1L, PUSHKIN);
         authorDao.update(author);
-        assertEquals(1, (int) authorDao.getByName(PUSHKIN).getId());
+        assertEquals(1, (long) authorDao.getByName(PUSHKIN).getId());
     }
 
-    @Test
-    void get_books_by_author_test() {
-        Author author = new Author(null, "Valentin Pikul");
-        List<Book> booksByAuthor = authorDao.getBooksByAuthor(author);
-        assertEquals(1, booksByAuthor.size());
-        assertEquals("Requiem to PQ-17", booksByAuthor.get(0).getName());
-    }
 }
