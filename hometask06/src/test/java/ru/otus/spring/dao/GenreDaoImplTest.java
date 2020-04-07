@@ -11,9 +11,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.spring.domain.Genre;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DisplayName("JDBC-based repository for genres processing")
+@DisplayName("Hibernate-based repository for genres processing")
 @DataJpaTest
 @Import(GenreDaoImpl.class)
 public class GenreDaoImplTest {
@@ -27,20 +28,21 @@ public class GenreDaoImplTest {
 
     @Test
     void successful_retrieval_by_id_test() {
-        Genre genre = genreDao.getById(0);
+        Genre genre = genreDao.getById(1);
         assertEquals("Historical books", genre.getName());
     }
 
     @Test
     void retrieval_with_non_existing_id_test() {
-        assertThrows(EmptyResultDataAccessException.class, () -> genreDao.getById(3));
+        Genre genre = genreDao.getById(3);
+        assertNull(genre);
     }
 
     @Test
     void successful_addition_test() {
         Genre genre = new Genre(null, FANTASY_GENRE);
         genreDao.insert(genre);
-        Genre actualGenre = genreDao.getById(2);
+        Genre actualGenre = genreDao.getById(3);
         assertEquals(FANTASY_GENRE, actualGenre.getName());
     }
 
@@ -63,11 +65,4 @@ public class GenreDaoImplTest {
         assertEquals(1, (long) genreDao.getByName(FANTASY_GENRE).getId());
     }
 
-//    @Test
-//    void successful_books_by_genre_retrieval_test() {
-//        Genre genre = new Genre(1L, null);
-//        List<Book> booksByGenre = genreDao.getBooksByGenre(genre);
-//        assertEquals(1, booksByGenre.size());
-//        assertEquals("Requiem to PQ-17", booksByGenre.get(0).getName());
-//    }
 }
