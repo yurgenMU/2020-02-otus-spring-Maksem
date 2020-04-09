@@ -11,21 +11,23 @@ import ru.otus.spring.domain.Commentary;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static ru.otus.spring.util.TestUtils.*;
 
 @DisplayName("Hibernate-based repository for commentaries processing")
 @DataJpaTest
-@Import(CommentaryDaoImpl.class)
+@Import(CommentaryDaoJpa.class)
 public class CommentaryDaoTest {
 
+    public static final String I_LIKE_THIS_BOOK_VERY_MUCH = "I like this book very much";
     @Autowired
     private TestEntityManager em;
 
     @Autowired
-    private CommentaryDaoImpl commentaryDao;
+    private CommentaryDaoJpa commentaryDao;
 
     @Test
     void successful_retrieval_by_id_test() {
-        Commentary commentary = commentaryDao.getById(1);
+        Commentary commentary = commentaryDao.getById(ID_1);
         assertEquals("Nice Book!", commentary.getContent());
     }
 
@@ -37,26 +39,26 @@ public class CommentaryDaoTest {
 
     @Test
     void successful_addition_test() {
-        Book book = em.find(Book.class, 1L);
-        String expectedContent = "I like this book very much";
+        Book book = em.find(Book.class, ID_1);
+        String expectedContent = I_LIKE_THIS_BOOK_VERY_MUCH;
         Commentary commentary = new Commentary(expectedContent, book);
         commentaryDao.insert(commentary);
-        Commentary actualCommentary = commentaryDao.getById(3);
+        Commentary actualCommentary = em.find(Commentary.class, ID_3);
         assertEquals(expectedContent, actualCommentary.getContent());
     }
 
     @Test
     void successful_removal_by_id_test() {
-        commentaryDao.deleteCommentary(1L);
-        Book book = em.find(Book.class, 1L);
+        commentaryDao.deleteCommentary(ID_1);
+        Book book = em.find(Book.class, ID_1);
         assertEquals(0, commentaryDao.getCommentariesByBook(book).size());
     }
 
 
     @Test
     void successful_update_test() {
-        String expectedContent = "I like this book very much";
-        Commentary commentary = em.find(Commentary.class, 1L);
+        String expectedContent = I_LIKE_THIS_BOOK_VERY_MUCH;
+        Commentary commentary = em.find(Commentary.class, ID_1);
         em.detach(commentary);
         commentaryDao.updateCommentary(commentary.getId(), expectedContent);
 

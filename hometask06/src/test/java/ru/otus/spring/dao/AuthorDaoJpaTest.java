@@ -10,11 +10,12 @@ import ru.otus.spring.domain.Author;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static ru.otus.spring.util.TestUtils.*;
 
 @DisplayName("Hibernate-based repository for authors processing")
 @DataJpaTest
-@Import(AuthorDaoImpl.class)
-public class AuthorDaoImplTest {
+@Import(AuthorDaoJpa.class)
+public class AuthorDaoJpaTest {
 
     private static final String PUSHKIN = "Alexander Pushkin";
 
@@ -26,41 +27,41 @@ public class AuthorDaoImplTest {
 
     @Test
     void successful_retrieval_by_id_test() {
-        Author author = authorDao.getById(1);
-        assertEquals("Nikolai Karamzin", author.getName());
+        Author author = authorDao.getById(ID_1);
+        assertEquals(KARAMZIN, author.getName());
     }
 
     @Test
     void retrieval_with_non_existing_id_test() {
-        Author author = authorDao.getById(3);
+        Author author = authorDao.getById(10);
         assertNull(author);
     }
 
     @Test
     void successful_addition_test() {
-        Author author = new Author(null, PUSHKIN);
+        Author author = new Author(null, GOGOL);
         authorDao.insert(author);
-        Author actualAuthor = authorDao.getById(3);
-        assertEquals(PUSHKIN, actualAuthor.getName());
+        Author actualAuthor = em.find(Author.class, ID_6);
+        assertEquals(GOGOL, actualAuthor.getName());
     }
 
     @Test
     void successful_removal_by_id_test() {
-        authorDao.deleteById(1);
-        assertEquals(1, authorDao.getAll().size());
+        authorDao.deleteById(ID_1);
+        assertEquals(4, authorDao.getAll().size());
     }
 
     @Test
     void successful_removal_by_name_test() {
-        authorDao.deleteByName("Valentin Pikul");
-        assertEquals(1, authorDao.getAll().size());
+        authorDao.deleteByName(PIKUL);
+        assertEquals(4, authorDao.getAll().size());
     }
 
     @Test
     void successful_update_test() {
-        Author author = new Author(1L, PUSHKIN);
+        Author author = new Author(ID_1, GOGOL);
         authorDao.update(author);
-        assertEquals(1, (long) authorDao.getByName(PUSHKIN).getId());
+        assertEquals(ID_1, (long) authorDao.getByName(GOGOL).getId());
     }
 
 }
