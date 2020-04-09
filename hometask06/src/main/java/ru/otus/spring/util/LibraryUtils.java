@@ -11,14 +11,14 @@ public class LibraryUtils {
         return str.matches(NUMERIC_REGEXP);
     }
 
-    public static <T> T retrieveEntity(String bookIdentifier,
+    public static <T> T retrieveEntity(String identifier,
                                        Function<Long, T> idRetriever, Function<String, T> nameRetriever) {
         T t;
-        if (isNumeric(bookIdentifier)) {
-            long bookId = Long.parseLong(bookIdentifier);
-            t = idRetriever.apply(bookId);
+        if (isNumeric(identifier)) {
+            long id = Long.parseLong(identifier);
+            t = idRetriever.apply(id);
         } else {
-            t = nameRetriever.apply(bookIdentifier);
+            t = nameRetriever.apply(identifier);
         }
         return t;
     }

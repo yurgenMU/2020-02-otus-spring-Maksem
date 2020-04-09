@@ -14,12 +14,12 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class CommentaryDaoImpl implements CommentaryDao {
+public class CommentaryDaoJpa implements CommentaryDao {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public CommentaryDaoImpl(EntityManager entityManager) {
+    public CommentaryDaoJpa(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

@@ -12,12 +12,12 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class GenreDaoImpl implements GenreDao {
+public class GenreDaoJpa implements GenreDao {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public GenreDaoImpl(EntityManager entityManager) {
+    public GenreDaoJpa(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

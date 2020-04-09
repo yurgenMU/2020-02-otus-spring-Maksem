@@ -1,9 +1,14 @@
 package ru.otus.spring.domain;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@NamedEntityGraph(name = "books-entity-graph",
+        attributeNodes = {@NamedAttributeNode("genres"), @NamedAttributeNode("author")})
 @Table(name = "books")
 public class Book {
 
@@ -18,6 +23,7 @@ public class Book {
     @JoinColumn(name = "author_id")
     private Author author;
 
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(targetEntity = Genre.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "genres_books", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))

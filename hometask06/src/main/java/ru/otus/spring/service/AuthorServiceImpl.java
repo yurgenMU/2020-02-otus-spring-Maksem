@@ -10,6 +10,7 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static ru.otus.spring.util.LibraryUtils.isNumeric;
+import static ru.otus.spring.util.LibraryUtils.retrieveEntity;
 
 @Service
 public class AuthorServiceImpl implements AuthorService{
@@ -44,13 +45,7 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public List<Book> getAllBooksForAuthor(String identifier) {
-        Author author;
-        if (isNumeric(identifier)) {
-            long id = Long.parseLong(identifier);
-            author = new Author(id, null);
-        } else {
-            author = new Author(null, identifier);
-        }
+        Author author = retrieveEntity(identifier, authorDao::getById, authorDao::getByName);
         return bookDao.getBooksByAuthor(author);
     }
 

@@ -6,19 +6,19 @@ import ru.otus.spring.domain.Author;
 import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Genre;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Repository
-public class BookDaoImpl implements BookDao {
+public class BookDaoJpa implements BookDao {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public BookDaoImpl(EntityManager entityManager) {
+    public BookDaoJpa(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -41,15 +41,15 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getBooksByGenre(Genre genre) {
-        TypedQuery<Book> query = entityManager.createQuery("select b from Book b where b.id = :id", Book.class)
-                .setParameter("id", genre.getId());
+        TypedQuery<Book> query = entityManager.createQuery("select b from Book b inner join b.genres g  where g.id = :genre_id", Book.class)
+                .setParameter("genre_id", genre.getId());
         return query.getResultList();
     }
 
     @Override
     public List<Book> getBooksByAuthor(Author author) {
-        TypedQuery<Book> query = entityManager.createQuery("select b from Book b where b.id = :id", Book.class)
-                .setParameter("id", author.getId());
+        TypedQuery<Book> query = entityManager.createQuery("select b from Book b where b.author = :author", Book.class)
+                .setParameter("author", author);
         return query.getResultList();
     }
 
@@ -78,8 +78,10 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        return entityManager.createQuery("select b from Book b", Book.class)
-                .getResultList();
+        EntityGraph graph = entityManager.getEntityGraph("books-entity-graph");
+        TypedQuery<Book> query = entityManager.createQuery("select b from Book b", Book.class);
+        query.setHint("javax.persistence.fetchgraph", graph);
+        return query.getResultList();
     }
 
 }

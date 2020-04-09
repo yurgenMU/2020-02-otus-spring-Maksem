@@ -9,12 +9,12 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class AuthorDaoImpl implements AuthorDao {
+public class AuthorDaoJpa implements AuthorDao {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public AuthorDaoImpl(EntityManager entityManager) {
+    public AuthorDaoJpa(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
