@@ -7,8 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.domain.Genre;
+import ru.otus.spring.domain.Author;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,79 +15,76 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+
 @Repository
-@Transactional
-public class GenreDaoImpl implements GenreDao {
+public class AuthorDaoJdbc implements AuthorDao {
 
     private final NamedParameterJdbcOperations jdbcOperations;
 
-    public GenreDaoImpl(NamedParameterJdbcOperations jdbcOperations) {
+    public AuthorDaoJdbc(NamedParameterJdbcOperations jdbcOperations) {
         this.jdbcOperations = jdbcOperations;
     }
 
+
     @Override
-    public void insert(Genre genre) {
+    public void insert(Author author) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource parameterSource = new MapSqlParameterSource(
-                Collections.singletonMap("name", genre.getName()));
-        jdbcOperations.update("insert into genres (name) values (:name)", parameterSource, keyHolder);
+                Collections.singletonMap("name", author.getName()));
+        jdbcOperations.update("insert into authors (name) values (:name)", parameterSource, keyHolder);
     }
 
     @Override
-    public Genre getById(long id) {
+    public Author getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return jdbcOperations.queryForObject(
-                "select * from genres where id = :id", params, new GenreMapper());
+                "select * from authors where id = :id", params, new AuthorMapper());
     }
 
     @Override
-    public Genre getByName(String name) {
+    public Author getByName(String name) {
         Map<String, Object> params = Collections.singletonMap("name", name);
+        System.out.println(name);
         return jdbcOperations.queryForObject(
-                "select * from genres where name = :name", params, new GenreMapper());
+                "select * from authors where name = :name", params, new AuthorMapper());
     }
 
-
     @Override
-    public void update(Genre genre) {
+    public void update(Author author) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", genre.getId())
-                .addValue("name", genre.getName());
-        jdbcOperations.update("update genres set name = :name where id = :id", parameterSource);
+                .addValue("id", author.getId())
+                .addValue("name", author.getName());
+        jdbcOperations.update("update authors set name = :name where id = :id", parameterSource);
     }
 
     @Override
     public void deleteByName(String name) {
-        Genre genre = getByName(name);
+        Author author = getByName(name);
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", genre.getId())
-                .addValue("name", genre.getName());
-        jdbcOperations.update(
-                "delete from genres_books where genre_id = :id;" +
-                        "delete from genres where name = :name", parameterSource);
+                .addValue("authorId", author.getId())
+                .addValue("name", author.getName());
+        jdbcOperations.update("delete from authors where name = :name", parameterSource);
     }
 
     @Override
     public void deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        jdbcOperations.update(
-                "delete from genres_books where genre_id = :id;" +
-                        "delete from genres where id = :id", params);
+        jdbcOperations.update("delete from authors where id = :id", params);
     }
 
     @Override
-    public List<Genre> getAll() {
+    public List<Author> getAll() {
         return jdbcOperations.query(
-                "select * from genres", new GenreMapper());
+                "select * from authors", new AuthorMapper());
     }
 
-    private static class GenreMapper implements RowMapper<Genre> {
+    private static class AuthorMapper implements RowMapper<Author> {
 
         @Override
-        public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
+        public Author mapRow(ResultSet resultSet, int i) throws SQLException {
             long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
-            return new Genre(id, name);
+            return new Author(id, name);
         }
     }
 }

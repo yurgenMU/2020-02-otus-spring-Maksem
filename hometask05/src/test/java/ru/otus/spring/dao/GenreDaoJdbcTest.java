@@ -12,52 +12,52 @@ import ru.otus.spring.domain.Genre;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static util.TestUtils.*;
 
 @DisplayName("JDBC-based repository for genres processing")
 @JdbcTest
-@Import(GenreDaoImpl.class)
-public class GenreDaoImplTest {
-    private static final String FANTASY_GENRE = "Fantasy";
+@Import(GenreDaoJdbc.class)
+public class GenreDaoJdbcTest {
 
     @Autowired
-    private GenreDaoImpl genreDao;
+    private GenreDaoJdbc genreDao;
 
     @Test
     void successful_retrieval_by_id_test() {
         Genre genre = genreDao.getById(1);
-        assertEquals("Historical books", genre.getName());
+        assertEquals(HISTORICAL_BOOKS, genre.getName());
     }
 
     @Test
     void retrieval_with_non_existing_id_test() {
-        assertThrows(EmptyResultDataAccessException.class, () -> genreDao.getById(3));
+        assertThrows(EmptyResultDataAccessException.class, () -> genreDao.getById(10L));
     }
 
     @Test
     void successful_addition_test() {
-        Genre genre = new Genre(null, FANTASY_GENRE);
+        Genre genre = new Genre(null, RUSSIAN_CLASSIC);
         genreDao.insert(genre);
-        Genre actualGenre = genreDao.getById(3);
-        assertEquals(FANTASY_GENRE, actualGenre.getName());
+        Genre actualGenre = genreDao.getById(ID_3);
+        assertEquals(RUSSIAN_CLASSIC, actualGenre.getName());
     }
 
     @Test
     void successful_removal_by_id_test() {
-        genreDao.deleteById(1);
-        assertEquals(1, genreDao.getAll().size());
+        genreDao.deleteById(ID_1);
+        assertEquals(4, genreDao.getAll().size());
     }
 
     @Test
     void successful_removal_by_name_test() {
-        genreDao.deleteByName("Historical books");
-        assertEquals(1, genreDao.getAll().size());
+        genreDao.deleteByName(HISTORICAL_BOOKS);
+        assertEquals(4, genreDao.getAll().size());
     }
 
     @Test
     void successful_update_test() {
-        Genre genre = new Genre(1L, FANTASY_GENRE);
+        Genre genre = new Genre(ID_3, FANTASY_GENRE);
         genreDao.update(genre);
-        assertEquals(1, (long) genreDao.getByName(FANTASY_GENRE).getId());
+        assertEquals(ID_3, (long) genreDao.getByName(FANTASY_GENRE).getId());
     }
 
 }

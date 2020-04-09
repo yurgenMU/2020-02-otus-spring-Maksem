@@ -15,70 +15,72 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static util.TestUtils.*;
 
-@DisplayName("JDBC-based repository for genres processing")
+@DisplayName("JDBC-based repository for books processing")
 @JdbcTest
-@Import(BookDaoImpl.class)
-public class BookDaoImplTest {
+@Import(BookDaoJdbc.class)
+public class BookDaoJdbcTest {
+
 
     @Autowired
-    private BookDaoImpl bookDao;
+    private BookDaoJdbc bookDao;
 
     @Test
     void successful_retrieval_by_id_test() {
-        Book book = bookDao.getById(1);
-        assertEquals("Requiem to PQ-17", book.getName());
-        assertEquals("Valentin Pikul", book.getAuthor().getName());
+        Book book = bookDao.getById(ID_1);
+        assertEquals(PQ_17, book.getName());
+        assertEquals(PIKUL, book.getAuthor().getName());
         List<Genre> genres = book.getGenres();
         assertEquals(2, genres.size());
-        assertEquals("Historical books", genres.get(0).getName());
+        assertEquals(MILITARY_BOOKS, genres.get(1).getName());
     }
 
     @Test
     void successful_addition_test() {
-        Author author = new Author(1L, null);
-        Genre genre = new Genre(2L, null);
+        Author author = new Author(ID_1, null);
+        Genre genre = new Genre(ID_2, null);
 
         String name = "New name";
         bookDao.insert(new Book(null, name, author, Collections.singletonList(genre)));
-        assertEquals(3, bookDao.getAll().size());
-        assertEquals(3, (long) bookDao.getByName(name).getId());
+        assertEquals(7, bookDao.getAll().size());
+        assertEquals(ID_7, (long) bookDao.getByName(name).getId());
     }
 
     @Test
     void successful_removal_by_id_test() {
-        bookDao.deleteById(1);
-        assertEquals(1, bookDao.getAll().size());
+        bookDao.deleteById(ID_1);
+        assertEquals(5, bookDao.getAll().size());
     }
 
     @Test
     void successful_removal_by_name_test() {
         System.out.println(bookDao.getAll());
-        bookDao.deleteByName("Requiem to PQ-17");
+        bookDao.deleteByName(PQ_17);
         System.out.println(bookDao.getAll());
-        assertEquals(1, bookDao.getAll().size());
+        assertEquals(5, bookDao.getAll().size());
     }
 
     @Test
     void successful_update_test() {
 
-        Author author = new Author(1L, null);
-        Genre genre = new Genre(2L, null);
+        Author author = new Author(ID_1, null);
+        Genre genre = new Genre(ID_2, null);
 
         String newName = "New name";
-        bookDao.update(new Book(1L, newName, author, Collections.singletonList(genre)));
-        assertEquals(1, (long) bookDao.getByName(newName).getId());
+        bookDao.update(new Book(ID_1, newName, author, Collections.singletonList(genre)));
+        assertEquals(ID_1, (long) bookDao.getByName(newName).getId());
     }
 
     @Test
     void successful_update_test2() {
         Book book1 = bookDao.getById(2);
 
-        Book toUpdate = new Book(2L, "newName", book1.getAuthor(), book1.getGenres());
-        toUpdate.getGenres().add(new Genre(2L, "Military books"));
+        Book toUpdate = new Book(ID_2, "newName", book1.getAuthor(), book1.getGenres());
+        toUpdate.getGenres().add(new Genre(ID_2, MILITARY_BOOKS));
         bookDao.update(toUpdate);
 
-        Book updated = bookDao.getById(2);
+        Book updated = bookDao.getById(ID_2);
         assertThat(updated).usingRecursiveComparison().isEqualTo(toUpdate);
     }
 
@@ -100,15 +102,15 @@ public class BookDaoImplTest {
         List<Book> booksByGenre = bookDao.getBooksByGenre(genre);
         System.out.println(bookDao.getAll());
         assertEquals(1, booksByGenre.size());
-        assertEquals("Requiem to PQ-17", booksByGenre.get(0).getName());
+        assertEquals(PQ_17, booksByGenre.get(0).getName());
     }
 
     @Test
     void get_books_by_author_test() {
-        Author author = new Author(null, "Valentin Pikul");
+        Author author = new Author(null, PIKUL);
         List<Book> booksByAuthor = bookDao.getBooksByAuthor(author);
         assertEquals(1, booksByAuthor.size());
-        assertEquals("Requiem to PQ-17", booksByAuthor.get(0).getName());
+        assertEquals(PQ_17, booksByAuthor.get(0).getName());
     }
 
 

@@ -7,28 +7,23 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.dao.ext.AuthorBooksResultSetExtractor;
 import ru.otus.spring.dao.ext.BookResultSetExtractor;
-import ru.otus.spring.dao.ext.GenresBooksResultSetExtractor;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Genre;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.Objects.nonNull;
 
 
 @Repository
 @Transactional
-public class BookDaoImpl implements BookDao {
+public class BookDaoJdbc implements BookDao {
 
     private final NamedParameterJdbcOperations jdbcOperations;
 
-    public BookDaoImpl(NamedParameterJdbcOperations jdbcOperations) {
+    public BookDaoJdbc(NamedParameterJdbcOperations jdbcOperations) {
         this.jdbcOperations = jdbcOperations;
     }
 
@@ -39,13 +34,8 @@ public class BookDaoImpl implements BookDao {
                 .addValue("name", book.getName())
                 .addValue("author_id", book.getAuthor().getId());
         jdbcOperations.update("insert into books (name, author_id) values (:name, :author_id)", parameterSource, keyHolder);
-        int bookId = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        book.getGenres().forEach(genre -> {
-            SqlParameterSource genresBooksParameter = new MapSqlParameterSource()
-                    .addValue("genre_id", genre.getId())
-                    .addValue("book_id", bookId);
-            jdbcOperations.update("insert into genres_books (genre_id, book_id) values (:genre_id, :book_id)", genresBooksParameter);
-        });
+        long bookId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        updateGenres(bookId, book, "insert into genres_books (genre_id, book_id) values (:genre_id, :book_id)");
     }
 
     @Override
@@ -55,7 +45,7 @@ public class BookDaoImpl implements BookDao {
                 "select b.id, b.name, a.id as author_id, " +
                         "a.name as author, g.id as genre_id, g.name as genre " +
                         "from books b inner join authors a on b.author_id = a.id " +
-                        "right join genres_books gb on gb.book_id = b.id " +
+                        "inner join genres_books gb on gb.book_id = b.id " +
                         "inner join genres g on g.id = gb.genre_id where b.id = :id", params,
                 new BookResultSetExtractor());
         return nonNull(books) && books.size() != 0 ? books.get(0) : null;
@@ -68,7 +58,7 @@ public class BookDaoImpl implements BookDao {
                 "select b.id, b.name, a.id as author_id, " +
                         "a.name as author, g.id as genre_id, g.name as genre " +
                         "from books b inner join authors a on b.author_id = a.id " +
-                        "right join genres_books gb on gb.book_id = b.id " +
+                        "inner join genres_books gb on gb.book_id = b.id " +
                         "inner join genres g on g.id = gb.genre_id where b.name = :name", params,
                 new BookResultSetExtractor());
         return nonNull(books) && books.size() != 0 ? books.get(0) : null;
@@ -83,7 +73,13 @@ public class BookDaoImpl implements BookDao {
                         "from genres g inner join genres_books gb on g.id = gb.genre_id " +
                         "inner join books b on gb.book_id = b.id " +
                         "inner join authors a on a.id = b.author_id where g.id = :id or g.name = :name", mapSqlParameterSource,
-                new GenresBooksResultSetExtractor());
+                (rs, i) -> {
+                    long id = rs.getLong("book_id");
+                    String name = rs.getString("book");
+                    long authorId = rs.getLong("author_id");
+                    String author = rs.getString("author");
+                    return new Book(id, name, new Author(authorId, author), Collections.emptyList());
+                });
     }
 
     @Override
@@ -92,11 +88,11 @@ public class BookDaoImpl implements BookDao {
                 .addValue("id", author.getId())
                 .addValue("name", author.getName());
         return jdbcOperations.query(
-                "select b.id, b.name, g.id as genre_id, g.name as genre from books b " +
+                "select b.id, b.name, a.id as author_id, a.name as author, g.id as genre_id, g.name as genre from books b " +
                         "inner join authors a on b.author_id = a.id " +
                         "inner join genres_books gb on gb.book_id = b.id " +
                         "inner join genres g on g.id = gb.genre_id where a.id = :id or a.name = :name;", parameterSource,
-                new AuthorBooksResultSetExtractor());
+                new BookResultSetExtractor());
     }
 
     @Override
@@ -107,12 +103,7 @@ public class BookDaoImpl implements BookDao {
         jdbcOperations.update("update books set name = :name where id = :id;" +
                 "delete from genres_books where book_id = :id", parameterSource);
         long id = book.getId();
-        book.getGenres().forEach(genre -> {
-            SqlParameterSource genresBooksParameter = new MapSqlParameterSource()
-                    .addValue("genre_id", genre.getId())
-                    .addValue("book_id", id);
-            jdbcOperations.update( "insert into genres_books values (:genre_id,:book_id)", genresBooksParameter);
-        });
+        updateGenres(id, book, "insert into genres_books values (:genre_id,:book_id)");
     }
 
     @Override
@@ -139,9 +130,18 @@ public class BookDaoImpl implements BookDao {
         return jdbcOperations.query("select b.id, b.name, a.id as author_id, " +
                         "a.name as author, g.id as genre_id, g.name as genre " +
                         "from books b inner join authors a on b.author_id = a.id " +
-                        "right join genres_books gb on gb.book_id = b.id " +
+                        "inner join genres_books gb on gb.book_id = b.id " +
                         "inner join genres g on g.id = gb.genre_id",
                 new BookResultSetExtractor());
+    }
+
+    private void updateGenres(long bookId, Book book, String sql) {
+        book.getGenres().forEach(genre -> {
+            SqlParameterSource genresBooksParameter = new MapSqlParameterSource()
+                    .addValue("genre_id", genre.getId())
+                    .addValue("book_id", bookId);
+            jdbcOperations.update(sql, genresBooksParameter);
+        });
     }
 
 }
