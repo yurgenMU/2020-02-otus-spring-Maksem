@@ -15,6 +15,9 @@ import java.util.Map;
 @Repository
 public class BookDaoJpa implements BookDao {
 
+    private static final String JAVAX_PERSISTENCE_FETCHGRAPH = "javax.persistence.fetchgraph";
+
+
     @PersistenceContext
     private final EntityManager entityManager;
 
@@ -48,8 +51,10 @@ public class BookDaoJpa implements BookDao {
 
     @Override
     public List<Book> getBooksByAuthor(Author author) {
+        EntityGraph graph = entityManager.getEntityGraph("books-entity-graph");
         TypedQuery<Book> query = entityManager.createQuery("select b from Book b where b.author = :author", Book.class)
                 .setParameter("author", author);
+        query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, graph);
         return query.getResultList();
     }
 
@@ -80,7 +85,7 @@ public class BookDaoJpa implements BookDao {
     public List<Book> getAll() {
         EntityGraph graph = entityManager.getEntityGraph("books-entity-graph");
         TypedQuery<Book> query = entityManager.createQuery("select b from Book b", Book.class);
-        query.setHint("javax.persistence.fetchgraph", graph);
+        query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, graph);
         return query.getResultList();
     }
 

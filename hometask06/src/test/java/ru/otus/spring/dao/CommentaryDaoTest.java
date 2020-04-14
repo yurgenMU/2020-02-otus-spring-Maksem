@@ -1,5 +1,6 @@
 package ru.otus.spring.dao;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Commentary;
+import ru.otus.spring.domain.Genre;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -50,8 +52,7 @@ public class CommentaryDaoTest {
     @Test
     void successful_removal_by_id_test() {
         commentaryDao.deleteCommentary(ID_1);
-        Book book = em.find(Book.class, ID_1);
-        assertEquals(0, commentaryDao.getCommentariesByBook(book).size());
+        Assert.assertNull(em.find(Commentary.class, ID_1));
     }
 
 

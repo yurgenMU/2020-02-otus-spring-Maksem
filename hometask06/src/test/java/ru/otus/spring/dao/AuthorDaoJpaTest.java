@@ -1,5 +1,6 @@
 package ru.otus.spring.dao;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +49,13 @@ public class AuthorDaoJpaTest {
     @Test
     void successful_removal_by_id_test() {
         authorDao.deleteById(ID_1);
-        assertEquals(4, authorDao.getAll().size());
+        Assert.assertNull(em.find(Author.class, ID_1));
     }
 
     @Test
     void successful_removal_by_name_test() {
         authorDao.deleteByName(PIKUL);
-        assertEquals(4, authorDao.getAll().size());
+        Assert.assertNull(em.find(Author.class, ID_2));
     }
 
     @Test
