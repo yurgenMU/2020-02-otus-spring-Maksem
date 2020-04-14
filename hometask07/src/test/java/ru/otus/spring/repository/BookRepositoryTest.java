@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static ru.otus.spring.util.TestUtils.*;
 
-@DisplayName("Hibernate-based repository for books processing")
+@DisplayName("Spring Data JPA-based repository for books processing")
 @DataJpaTest
 public class BookRepositoryTest {
 
@@ -41,8 +41,8 @@ public class BookRepositoryTest {
 
     @Test
     void successful_addition_test() {
-        Author author = new Author(ID_1, null);
-        Genre genre = new Genre(ID_2, null);
+        Author author = em.find(Author.class, ID_1);
+        Genre genre = em.find(Genre.class, ID_2);
 
         Book bookToAdd = new Book(null, NEW_NAME, author, Collections.singletonList(genre));
         bookDao.save(bookToAdd);

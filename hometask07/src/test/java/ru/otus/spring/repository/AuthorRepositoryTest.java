@@ -9,16 +9,16 @@ import org.springframework.context.annotation.Import;
 import ru.otus.spring.domain.Author;
 
 import java.util.List;
+import java.util.Optional;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static ru.otus.spring.util.TestUtils.*;
 
-@DisplayName("Hibernate-based repository for authors processing")
+@DisplayName("Spring Data JPA-based repository for authors processing")
 @DataJpaTest
 public class AuthorRepositoryTest {
-
-    private static final String PUSHKIN = "Alexander Pushkin";
 
     @Autowired
     private TestEntityManager em;
@@ -34,8 +34,8 @@ public class AuthorRepositoryTest {
 
     @Test
     void retrieval_with_non_existing_id_test() {
-        Author author = authorRepository.findById(10L).orElseThrow();
-        assertNull(author);
+        Optional<Author> author = authorRepository.findById(10L);
+        assertTrue(author.isEmpty());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class AuthorRepositoryTest {
     @Test
     void successful_removal_by_name_test() {
         authorRepository.deleteByName(PIKUL);
-        assertEquals(4, getAll().size());
+        assertNull(em.find(Author.class, ID_2));
     }
 
     @Test

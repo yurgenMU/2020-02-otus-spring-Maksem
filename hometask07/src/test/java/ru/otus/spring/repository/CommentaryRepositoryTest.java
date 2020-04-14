@@ -1,5 +1,6 @@
 package ru.otus.spring.repository;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,14 @@ import org.springframework.context.annotation.Import;
 import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Commentary;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.otus.spring.util.TestUtils.*;
 
-@DisplayName("Hibernate-based repository for commentaries processing")
+@DisplayName("Spring Data JPA-based repository for commentaries processing")
 @DataJpaTest
 public class CommentaryRepositoryTest {
 
@@ -32,8 +36,8 @@ public class CommentaryRepositoryTest {
 
     @Test
     void retrieval_with_non_existing_id_test() {
-        Commentary commentary = commentaryDao.findById(ID_3).orElseThrow();
-        assertNull(commentary);
+        Optional<Commentary> commentary = commentaryDao.findById(ID_3);
+        assertTrue(commentary.isEmpty());
     }
 
     @Test
@@ -49,8 +53,7 @@ public class CommentaryRepositoryTest {
     @Test
     void successful_removal_by_id_test() {
         commentaryDao.deleteById(ID_1);
-        Book book = em.find(Book.class, ID_1);
-        assertEquals(0, commentaryDao.findAllByBook(book).size());
+        Assert.assertNull(em.find(Commentary.class, ID_1));
     }
 
 

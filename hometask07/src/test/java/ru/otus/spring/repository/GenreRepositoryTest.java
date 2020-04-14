@@ -1,6 +1,7 @@
 package ru.otus.spring.repository;
 
 
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,13 +13,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.spring.domain.Genre;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.otus.spring.util.TestUtils.*;
 
-@DisplayName("Hibernate-based repository for genres processing")
+@DisplayName("Spring Data JPA-based repository for genres processing")
 @DataJpaTest
 public class GenreRepositoryTest {
     private static final String FANTASY_GENRE = "Fantasy";
@@ -37,8 +38,8 @@ public class GenreRepositoryTest {
 
     @Test
     void retrieval_with_non_existing_id_test() {
-        Genre genre = genreDao.findById(10L).orElseThrow();
-        assertNull(genre);
+        Optional<Genre> genre = genreDao.findById(10L);
+        assertTrue(genre.isEmpty());
     }
 
     @Test
@@ -52,14 +53,14 @@ public class GenreRepositoryTest {
     @Test
     void successful_removal_by_id_test() {
         genreDao.deleteById(ID_1);
-        assertEquals(4, getAll().size());
+        Assert.assertNull(em.find(Genre.class, ID_1));
     }
 
 
     @Test
     void successful_removal_by_name_test() {
         genreDao.deleteByName(HISTORICAL_BOOKS);
-        assertEquals(4, getAll().size());
+        Assert.assertNull(em.find(Genre.class, ID_1));
     }
 
     @Test
@@ -69,7 +70,4 @@ public class GenreRepositoryTest {
         assertEquals(ID_3, (long) genreDao.findByName(FANTASY_GENRE).getId());
     }
 
-    private List<Genre> getAll() {
-        return (List<Genre>) genreDao.findAll();
-    }
 }
