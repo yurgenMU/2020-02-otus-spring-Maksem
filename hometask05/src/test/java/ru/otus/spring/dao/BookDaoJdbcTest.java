@@ -41,10 +41,9 @@ public class BookDaoJdbcTest {
         Author author = new Author(ID_1, null);
         Genre genre = new Genre(ID_2, null);
 
-        String name = "New name";
-        bookDao.insert(new Book(null, name, author, Collections.singletonList(genre)));
+        bookDao.insert(new Book(null, NEW_NAME, author, Collections.singletonList(genre)));
         assertEquals(7, bookDao.getAll().size());
-        assertEquals(ID_7, (long) bookDao.getByName(name).getId());
+        assertEquals(ID_7, (long) bookDao.getByName(NEW_NAME).getId());
     }
 
     @Test
@@ -67,16 +66,15 @@ public class BookDaoJdbcTest {
         Author author = new Author(ID_1, null);
         Genre genre = new Genre(ID_2, null);
 
-        String newName = "New name";
-        bookDao.update(new Book(ID_1, newName, author, Collections.singletonList(genre)));
-        assertEquals(ID_1, (long) bookDao.getByName(newName).getId());
+        bookDao.update(new Book(ID_1, NEW_NAME, author, Collections.singletonList(genre)));
+        assertEquals(ID_1, (long) bookDao.getByName(NEW_NAME).getId());
     }
 
     @Test
     void successful_update_test2() {
         Book book1 = bookDao.getById(2);
 
-        Book toUpdate = new Book(ID_2, "newName", book1.getAuthor(), book1.getGenres());
+        Book toUpdate = new Book(ID_2, NEW_NAME, book1.getAuthor(), book1.getGenres());
         toUpdate.getGenres().add(new Genre(ID_2, MILITARY_BOOKS));
         bookDao.update(toUpdate);
 
@@ -89,7 +87,7 @@ public class BookDaoJdbcTest {
         Book book1 = bookDao.getById(1);
         Book book2 = bookDao.getById(2);
 
-        bookDao.update(new Book(2L, "newName", book2.getAuthor(), book2.getGenres()));
+        bookDao.update(new Book(2L, NEW_NAME, book2.getAuthor(), book2.getGenres()));
 
         Book book0AfterUpdate = bookDao.getById(1);
         assertThat(book0AfterUpdate).usingRecursiveComparison().isEqualTo(book1);
@@ -100,7 +98,7 @@ public class BookDaoJdbcTest {
     void successful_books_by_genre_retrieval_test() {
         Genre genre = new Genre(2L, null);
         List<Book> booksByGenre = bookDao.getBooksByGenre(genre);
-        System.out.println(bookDao.getAll());
+        booksByGenre.forEach(System.out::println);
         assertEquals(1, booksByGenre.size());
         assertEquals(PQ_17, booksByGenre.get(0).getName());
     }

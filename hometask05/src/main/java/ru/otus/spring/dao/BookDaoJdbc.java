@@ -35,7 +35,10 @@ public class BookDaoJdbc implements BookDao {
                 .addValue("author_id", book.getAuthor().getId());
         jdbcOperations.update("insert into books (name, author_id) values (:name, :author_id)", parameterSource, keyHolder);
         long bookId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        updateGenres(bookId, book, "insert into genres_books (genre_id, book_id) values (:genre_id, :book_id)");
+        MapSqlParameterSource[] batch = getBatch(book, bookId);
+        jdbcOperations.batchUpdate(
+                "insert into genres_books (genre_id, book_id) values (:genre_id, :book_id)", batch
+        );
     }
 
     @Override
@@ -69,17 +72,12 @@ public class BookDaoJdbc implements BookDao {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("id", genre.getId())
                 .addValue("name", genre.getName());
-        return jdbcOperations.query("select distinct b.id as book_id, b.name as book, a.id as author_id, a.name as author " +
+        return jdbcOperations.query("select distinct b.id as book_id, b.name as book, a.id as author_id, a.name as author, " +
+                        "g.id as genre_id, g.name as genre " +
                         "from genres g inner join genres_books gb on g.id = gb.genre_id " +
                         "inner join books b on gb.book_id = b.id " +
                         "inner join authors a on a.id = b.author_id where g.id = :id or g.name = :name", mapSqlParameterSource,
-                (rs, i) -> {
-                    long id = rs.getLong("book_id");
-                    String name = rs.getString("book");
-                    long authorId = rs.getLong("author_id");
-                    String author = rs.getString("author");
-                    return new Book(id, name, new Author(authorId, author), Collections.emptyList());
-                });
+                new BookResultSetExtractor());
     }
 
     @Override
@@ -103,7 +101,7 @@ public class BookDaoJdbc implements BookDao {
         jdbcOperations.update("update books set name = :name where id = :id;" +
                 "delete from genres_books where book_id = :id", parameterSource);
         long id = book.getId();
-        updateGenres(id, book, "insert into genres_books values (:genre_id,:book_id)");
+        jdbcOperations.batchUpdate("insert into genres_books values (:genre_id,:book_id)", getBatch(book, id));
     }
 
     @Override
@@ -135,13 +133,13 @@ public class BookDaoJdbc implements BookDao {
                 new BookResultSetExtractor());
     }
 
-    private void updateGenres(long bookId, Book book, String sql) {
-        book.getGenres().forEach(genre -> {
-            SqlParameterSource genresBooksParameter = new MapSqlParameterSource()
-                    .addValue("genre_id", genre.getId())
-                    .addValue("book_id", bookId);
-            jdbcOperations.update(sql, genresBooksParameter);
-        });
+    private MapSqlParameterSource[] getBatch(Book book, long bookId) {
+        return book.getGenres()
+                .stream()
+                .map(genre -> new MapSqlParameterSource()
+                        .addValue("genre_id", genre.getId())
+                        .addValue("book_id", bookId))
+                .toArray(MapSqlParameterSource[]::new);
     }
 
 }

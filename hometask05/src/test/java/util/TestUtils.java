@@ -12,7 +12,7 @@ public class TestUtils {
     public static final long ID_6 = 6L;
     public static final long ID_7 = 7L;
 
-
+    public static final String NEW_NAME = "New name";
     public static final String FANTASY_GENRE = "Fantasy";
     public static final String PQ_17 = "Requiem to PQ-17";
     public static final String MILITARY_BOOKS = "Military books";
