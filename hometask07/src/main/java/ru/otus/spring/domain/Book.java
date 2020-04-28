@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @NamedEntityGraph(name = "books-entity-graph",
-        attributeNodes = {@NamedAttributeNode("genres"), @NamedAttributeNode("author")})
+        attributeNodes = {@NamedAttributeNode("author")})
 @Table(name = "books")
 public class Book {
 
