@@ -6,13 +6,11 @@ import ru.otus.spring.domain.Author;
 
 public interface AuthorRepository extends MongoRepository<Author, Long> {
 
-    Author findAuthorById(Long id);
-
     Author findByName(String name);
 
-    @Query(value = "{'id' : $0}", delete = true)
-    void deleteById(Long id);
-
+//    @Query(value = "{'id' : $0}", delete = true)
+//    void deleteById(Long id);
+//
     @Query(value = "{'name' : $0}", delete = true)
     void deleteByName(String name);
 

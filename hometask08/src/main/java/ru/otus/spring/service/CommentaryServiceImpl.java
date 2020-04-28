@@ -24,7 +24,7 @@ public class CommentaryServiceImpl implements CommentaryService {
 
     @Override
     public void addCommentaryToBook(String bookIdentifier, String content) {
-        Book book = retrieveEntity(bookIdentifier, bookRepository::findBookById, bookRepository::findBookByName);
+        Book book = retrieveEntity(bookIdentifier, id -> bookRepository.findById(id).orElseThrow(), bookRepository::findBookByName);
         if (book == null) {
             throw new LibraryException("Book with this identifier does not exist");
         }
@@ -35,7 +35,7 @@ public class CommentaryServiceImpl implements CommentaryService {
     @Override
     public void updateCommentary(String commentaryIdentifier, String content) {
         long id = Long.parseLong(commentaryIdentifier);
-        commentaryRepository.updateCommentary(id, content);
+        commentaryRepository.insert(new Commentary(id, content));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CommentaryServiceImpl implements CommentaryService {
 
     @Override
     public List<Commentary> getAllCommentaries(String bookIdentifier) {
-        Book book = retrieveEntity(bookIdentifier, bookRepository::findBookById, bookRepository::findBookByName);
+        Book book = retrieveEntity(bookIdentifier, id -> bookRepository.findById(id).orElseThrow(), bookRepository::findBookByName);
         if (book == null) {
             throw new LibraryException("Book with this identifier does not exist");
         }

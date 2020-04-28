@@ -39,12 +39,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBook(String identifier) {
-        return retrieveEntity(identifier, bookRepository::findBookById, bookRepository::findBookByName);
+        return retrieveEntity(identifier, id -> bookRepository.findById(id).orElseThrow(), bookRepository::findBookByName);
     }
 
     @Override
     public void updateBook(String bookIdentifier, String name, String authorIdentifier, List<String> genres) {
-        Book book = retrieveEntity(bookIdentifier, bookRepository::findBookById, bookRepository::findBookByName);
+        Book book = retrieveEntity(bookIdentifier, id -> bookRepository.findById(id).orElseThrow(), bookRepository::findBookByName);
         if (isNull(book)) {
             throw new LibraryException("Book with this identifier does not exist in library");
         }
@@ -85,7 +85,7 @@ public class BookServiceImpl implements BookService {
     private List<Genre> retrieveGenres(List<String> genres) {
         return genres.stream().map(genreIdentifier -> {
             Genre genre = retrieveEntity(genreIdentifier, id -> genreRepository.findById(id)
-                    .orElseThrow(BookServiceImpl::notFoundSupplier), genreRepository::findByName);
+                    .orElseThrow(BookServiceImpl::notFoundSupplier), genreRepository::findGenreByName);
             if (isNull(genre)) {
                 throw new LibraryException("Genre with this identifier does not exist in library");
             }

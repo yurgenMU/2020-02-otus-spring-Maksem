@@ -1,6 +1,7 @@
 package ru.otus.spring.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class Book {
 
     private Author author;
 
+    @DBRef
     private List<Genre> genres;
 
     public Book() {

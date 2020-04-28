@@ -10,17 +10,17 @@ import java.util.List;
 
 public interface BookRepository extends MongoRepository<Book, Long> {
 
-    Book findBookById(Long id);
-
+//    Book findBookById(Long id);
+//
     Book findBookByName(String name);
 
-    @Query(value = "{'id' : $0}", delete = true)
-    void deleteById(Long id);
-
+//    @Query(value = "{'id' : $0}", delete = true)
+//    void deleteById(Long id);
+//
     @Query(value = "{'name' : $0}", delete = true)
     void deleteByName(String name);
 
     List<Book> findAllByAuthor(Author author);
 
-    List<Book> findAllByGenre(Genre genre);
+    List<Book> findAllByGenres(Genre genre);
 }

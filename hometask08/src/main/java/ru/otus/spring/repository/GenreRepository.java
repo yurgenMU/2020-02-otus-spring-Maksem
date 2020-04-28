@@ -9,16 +9,17 @@ import java.util.List;
 
 public interface GenreRepository extends MongoRepository<Genre, Long> {
 
-    Genre findAuthorById(Long id);
+//    Genre findAuthorById(Long id);
+//
+    Genre findGenreByName(String name);
+//
+//    @Query(value = "{'id' : $0}", delete = true)
+//    void deleteById(Long id);
+//
+//    @Query(value = "{'name' : $0}", delete = true)
+//    void deleteByName(String name);
+    void deleteGenreByName(String name);
 
-    Genre findByName(String name);
-
-    @Query(value = "{'id' : $0}", delete = true)
-    void deleteById(Long id);
-
-    @Query(value = "{'name' : $0}", delete = true)
-    void deleteByName(String name);
-
-    List<Genre> findAllByBook(Book book);
+    List<Genre> findAllByBooks(Book book);
 }
 

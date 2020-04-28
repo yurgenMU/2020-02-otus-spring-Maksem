@@ -23,6 +23,11 @@ public class Commentary {
         this.date = new Date();
     }
 
+    public Commentary(Long id, String content) {
+        this.id = id;
+        this.content = content;
+    }
+
     public Commentary() {
 
     }

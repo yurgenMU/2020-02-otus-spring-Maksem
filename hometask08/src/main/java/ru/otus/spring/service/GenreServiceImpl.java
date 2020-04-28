@@ -36,7 +36,7 @@ public class GenreServiceImpl implements GenreService {
             id = Long.parseLong(identifier);
             genreRepository.save(new Genre(id, newName));
         } else {
-            Genre genre = genreRepository.findByName(identifier);
+            Genre genre = genreRepository.findGenreByName(identifier);
             if (nonNull(genre)) {
                 id = genre.getId();
                 genreRepository.save(new Genre(id, newName));
@@ -47,8 +47,8 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public List<Book> getAllBooksForGenre(String identifier) {
         Genre genre = retrieveEntity(identifier, id -> genreRepository.findById(id)
-                .orElseThrow(() -> new LibraryException("Genre with this id not found")), genreRepository::findByName);
-        return bookRepository.findAllByGenre(genre);
+                .orElseThrow(() -> new LibraryException("Genre with this id not found")), genreRepository::findGenreByName);
+        return bookRepository.findAllByGenres(genre);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GenreServiceImpl implements GenreService {
             long id = Long.parseLong(identifier);
             genreRepository.deleteById(id);
         } else {
-            genreRepository.deleteByName(identifier);
+            genreRepository.deleteGenreByName(identifier);
         }
     }
 
