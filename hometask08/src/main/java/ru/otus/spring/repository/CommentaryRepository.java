@@ -7,10 +7,9 @@ import ru.otus.spring.domain.Commentary;
 
 import java.util.List;
 
-public interface CommentaryRepository extends MongoRepository<Commentary, Long> {
+public interface CommentaryRepository extends MongoRepository<Commentary, String> {
 
 
-    Commentary findCommentaryById(Long id);
 
 
 //    @Query(value = "{'id' : $0}", delete = true)

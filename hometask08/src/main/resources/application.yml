@@ -6,4 +6,4 @@ spring:
       database: library
 logging:
   level:
-    root: ERROR
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

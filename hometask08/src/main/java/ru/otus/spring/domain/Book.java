@@ -6,14 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document
+@Document(collection = "books")
 public class Book {
 
     @Id
-    private Long id;
+    private String id;
 
     private String name;
 
+    @DBRef
     private Author author;
 
     @DBRef
@@ -22,14 +23,14 @@ public class Book {
     public Book() {
     }
 
-    public Book(Long id, String name, Author author, List<Genre> genres) {
+    public Book(String id, String name, Author author, List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.author = author;
         this.genres = genres;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

@@ -9,8 +9,6 @@ import ru.otus.spring.util.LibraryException;
 
 import java.util.List;
 
-import static ru.otus.spring.util.LibraryUtils.retrieveEntity;
-
 @Service
 public class CommentaryServiceImpl implements CommentaryService {
 
@@ -24,32 +22,26 @@ public class CommentaryServiceImpl implements CommentaryService {
 
     @Override
     public void addCommentaryToBook(String bookIdentifier, String content) {
-        Book book = retrieveEntity(bookIdentifier, id -> bookRepository.findById(id).orElseThrow(), bookRepository::findBookByName);
-        if (book == null) {
-            throw new LibraryException("Book with this identifier does not exist");
-        }
+        Book book = bookRepository.findById(bookIdentifier).orElseThrow(
+                () -> new LibraryException("Book with this id not found"));
         Commentary commentary = new Commentary(content, book);
         commentaryRepository.save(commentary);
     }
 
     @Override
     public void updateCommentary(String commentaryIdentifier, String content) {
-        long id = Long.parseLong(commentaryIdentifier);
-        commentaryRepository.insert(new Commentary(id, content));
+        commentaryRepository.insert(new Commentary(commentaryIdentifier, content));
     }
 
     @Override
     public void deleteCommentary(String commentaryIdentifier) {
-        long id = Long.parseLong(commentaryIdentifier);
-        commentaryRepository.deleteById(id);
+        commentaryRepository.deleteById(commentaryIdentifier);
     }
 
     @Override
     public List<Commentary> getAllCommentaries(String bookIdentifier) {
-        Book book = retrieveEntity(bookIdentifier, id -> bookRepository.findById(id).orElseThrow(), bookRepository::findBookByName);
-        if (book == null) {
-            throw new LibraryException("Book with this identifier does not exist");
-        }
+        Book book = bookRepository.findById(bookIdentifier).orElseThrow(
+                () -> new LibraryException("Book with this id not found"));
         return commentaryRepository.findAllByBook(book);
     }
 }

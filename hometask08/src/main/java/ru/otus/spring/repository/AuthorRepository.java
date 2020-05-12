@@ -4,15 +4,15 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import ru.otus.spring.domain.Author;
 
-public interface AuthorRepository extends MongoRepository<Author, Long> {
+public interface AuthorRepository extends MongoRepository<Author, String> {
 
-    Author findByName(String name);
+//    Author findByName(String name);
 
 //    @Query(value = "{'id' : $0}", delete = true)
 //    void deleteById(Long id);
 //
-    @Query(value = "{'name' : $0}", delete = true)
-    void deleteByName(String name);
+//    @Query(value = "{'name' : $0}", delete = true)
+//    void deleteByName(String name);
 
 
 }

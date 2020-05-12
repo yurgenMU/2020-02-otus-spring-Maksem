@@ -5,11 +5,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document
+@Document(collection = "commentaries")
 public class Commentary {
 
     @Id
-    private Long id;
+    private String id;
 
     private String content;
 
@@ -23,7 +23,7 @@ public class Commentary {
         this.date = new Date();
     }
 
-    public Commentary(Long id, String content) {
+    public Commentary(String id, String content) {
         this.id = id;
         this.content = content;
     }
@@ -32,7 +32,7 @@ public class Commentary {
 
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

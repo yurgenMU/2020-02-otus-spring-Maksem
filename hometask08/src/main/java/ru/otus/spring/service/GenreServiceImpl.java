@@ -9,10 +9,6 @@ import ru.otus.spring.util.LibraryException;
 
 import java.util.List;
 
-import static java.util.Objects.nonNull;
-import static ru.otus.spring.util.LibraryUtils.isNumeric;
-import static ru.otus.spring.util.LibraryUtils.retrieveEntity;
-
 @Service
 public class GenreServiceImpl implements GenreService {
 
@@ -31,34 +27,19 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void editGenre(String identifier, String newName) {
-        Long id;
-        if (isNumeric(identifier)) {
-            id = Long.parseLong(identifier);
-            genreRepository.save(new Genre(id, newName));
-        } else {
-            Genre genre = genreRepository.findGenreByName(identifier);
-            if (nonNull(genre)) {
-                id = genre.getId();
-                genreRepository.save(new Genre(id, newName));
-            }
-        }
+        genreRepository.save(new Genre(identifier, newName));
     }
 
     @Override
     public List<Book> getAllBooksForGenre(String identifier) {
-        Genre genre = retrieveEntity(identifier, id -> genreRepository.findById(id)
-                .orElseThrow(() -> new LibraryException("Genre with this id not found")), genreRepository::findGenreByName);
+        Genre genre = genreRepository.findById(identifier)
+                .orElseThrow(() -> new LibraryException("Genre with this id not found"));
         return bookRepository.findAllByGenres(genre);
     }
 
     @Override
     public void removeGenre(String identifier) {
-        if (isNumeric(identifier)) {
-            long id = Long.parseLong(identifier);
-            genreRepository.deleteById(id);
-        } else {
-            genreRepository.deleteGenreByName(identifier);
-        }
+        genreRepository.deleteById(identifier);
     }
 
     @Override
