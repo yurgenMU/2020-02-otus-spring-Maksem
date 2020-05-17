@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit author</title>
+</head>
+<body>
+<span th:text="${author.name}">Author name</span>
+Books:
+<ul th:each="book: ${books}">
+    <li th:text="${book.name}">Book
+    </li>
+
+</ul>
+</body>
+</html>

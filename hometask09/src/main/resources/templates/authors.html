@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Authors</title>
+</head>
+<body>
+<ul th:each="author: ${authors}">
+    <li>
+        <a th:href="@{'/authors/edit/'+${author.id}}" href="authors/edit.html" th:text="${author.name}">Author</a>
+    </li>
+
+</ul>
+
+Add new author
+<form action="#" th:action="@{authors}" method="post">
+    <input type="text" th:value="${name}" name="name"/>
+    <input type="submit" />
+</form>
+<!--<table>-->
+<!--    <th:block th:each="user : ${users}">-->
+<!--        <tr>-->
+<!--            <td th:text="${user.login}">...</td>-->
+<!--            <td th:text="${user.name}">...</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td colspan="2" th:text="${user.address}">...</td>-->
+<!--        </tr>-->
+<!--    </th:block>-->
+<!--</table>-->
+</body>
+</html>
