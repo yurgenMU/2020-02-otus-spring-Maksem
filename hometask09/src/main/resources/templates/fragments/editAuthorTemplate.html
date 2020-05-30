@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="edit-author">
+    <script type="text/x-template" id="edit-author-template">
+        <div class="edit-book__section">
+            <span class="edit-book__section_label">Author:</span>
+            <div class="edit-book__author-select">
+                <input class="edit-book__author-select-input" v-model.trim="searchTerm"
+                       @blur="closePopup" @focus="startEditing" />
+                <div class="edit-book__filtered-authors-list" v-show="showPopup">
+                    <div class="edit-book__author" v-for="author in filteredAuthors"
+                         @mousedown="chooseAuthor(author)"><span> {{ author.name }}</span></div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </script>
+
+</div>
+</body>
+</html>

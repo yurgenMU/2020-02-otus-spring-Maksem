@@ -1,6 +1,9 @@
 package ru.otus.spring.util;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.function.Function;
 
 public class LibraryUtils {
@@ -21,5 +24,13 @@ public class LibraryUtils {
             t = nameRetriever.apply(identifier);
         }
         return t;
+    }
+
+    public static String toString(Object object) {
+        try {
+            return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new LibraryException("Error while object serializing", e);
+        }
     }
 }

@@ -6,11 +6,11 @@ import org.springframework.stereotype.Controller;
 //import org.springframework.shell.standard.ShellMethod;
 //import org.springframework.shell.standard.ShellOption;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.domain.Book;
+import ru.otus.spring.service.AuthorService;
 import ru.otus.spring.service.BookService;
+import ru.otus.spring.service.GenreService;
 
 import java.util.Arrays;
 
@@ -18,17 +18,21 @@ import java.util.Arrays;
 //import java.util.Arrays;
 //import java.util.List;
 //
-@Controller("/books")
+@Controller
 public class BookController {
     private static final String BOOKS = "books";
 
     private final BookService bookService;
+    private final AuthorService authorService;
+    private final GenreService genreService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, AuthorService authorService, GenreService genreService) {
         this.bookService = bookService;
+        this.authorService = authorService;
+        this.genreService = genreService;
     }
 
-    @GetMapping
+    @GetMapping("/books")
     public String loadPage(Model model) {
         model.addAttribute(BOOKS, bookService.getAllBooks());
         return BOOKS;
@@ -36,9 +40,24 @@ public class BookController {
 
     //
     @PostMapping("/books/add")
-    public void addGenre(@ModelAttribute("name") String name, @ModelAttribute("authorName") String authorName,
-                         @ModelAttribute("genres") String genres) {
+    public void addGenre(@RequestParam("name") String name, @RequestParam("authorName") String authorName,
+                         @RequestParam("genres") String genres) {
         bookService.addBook(name, authorName, Arrays.asList(genres.split(",")));
+    }
+
+    @GetMapping("/books/edit/{id}")
+    public String loadEditBooksPage(@PathVariable("id") String id, Model model) {
+        model.addAttribute("book", bookService.getBook(id));
+        model.addAttribute("allAuthors", authorService.getAllAuthors());
+        model.addAttribute("allGenres", genreService.getAllGenres());
+        return "editBook";
+    }
+
+    @PostMapping("/books/edit/{id}")
+    public String editBook(@PathVariable("id") String id, @RequestParam("name") String name, @RequestParam("author") String author,
+                           @RequestParam("genres") String genres) {
+
+        return "redirect:/books";
     }
 //
 //    @ShellMethod(value = "Edit existing book", key = {"edit book"})

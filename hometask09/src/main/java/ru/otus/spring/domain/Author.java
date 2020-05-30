@@ -1,5 +1,7 @@
 package ru.otus.spring.domain;
 
+import ru.otus.spring.util.LibraryUtils;
+
 import javax.persistence.*;
 
 @Entity
@@ -31,6 +33,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return String.format("id: %s, name: %s", id, name);
+        return LibraryUtils.toString(this);
     }
 }

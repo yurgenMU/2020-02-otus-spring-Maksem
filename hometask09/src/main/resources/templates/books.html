@@ -5,10 +5,26 @@
     <title>Title</title>
 </head>
 <body>
+<table>
+    <div th:each="book : ${books}">
+        <tr th:each="genre,iter: ${book.genres}">
 
+            <td th:if="${iter.index == 0}" th:rowspan="${book.genres.size()}">
+                <a th:href="@{'/books/edit/'+${book.id}}" href="/books/edit.html" th:text="${book.name}">Book</a></td>
+            <td th:if="${iter.index == 0}" th:rowspan="${book.genres.size()}">
+                <a th:href="@{'/authors/edit/'+${book.author.id}}" href="/authors/edit.html" th:text="${book.author.name}">Author</a>
+            </td>
+            <td>
+                <a th:href="@{'/genres/edit/'+${genre.id}}" href="/genres/edit.html" th:text="${genre.name}">Author</a>
+            </td>
+        </tr>
+    </div>
+
+</table>
 Add book
-<form action="#" th:action="@{/add}" method="post">
-    <input type="text" th:field="*{name}" />
+<form action="#" th:action="@{/books/add}" method="post">
+    <input type="text" th:value="${name}" name="name"/>
+    <div>azaza</div>
     <input type="submit" />
 </form>
 

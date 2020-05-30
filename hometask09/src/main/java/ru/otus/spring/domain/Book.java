@@ -2,6 +2,7 @@ package ru.otus.spring.domain;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import ru.otus.spring.util.LibraryUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -58,23 +59,6 @@ public class Book {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        var size = genres.size();
-        String authorSignature = author != null ? "Author:" : "";
-        String authorName = author != null ? author.getName() : "";
-        String genreSignature = "";
-        if (size > 1) {
-            for (int i = 0; i < size - 1; i++) {
-                sb.append(genres.get(i).getName()).append(", ");
-            }
-            sb.append(genres.get(size - 1).getName());
-            genreSignature = "Genres:";
-        } else {
-            if (size == 1) {
-                sb.append(genres.get(0).getName());
-                genreSignature = "Genre:";
-            }
-        }
-        return String.format("%s: %s. %s %s. %s %s", id, name, authorSignature, authorName, genreSignature, sb.toString()).trim();
+        return LibraryUtils.toString(this);
     }
 }

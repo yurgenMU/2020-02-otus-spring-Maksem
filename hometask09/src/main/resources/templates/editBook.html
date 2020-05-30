@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/../../css/main.css}" rel="stylesheet"/>
+    <script type="text/javascript" th:src="@{../../js/vue-2.4.4.prod.js}" src="../static/js/vue-2.4.4.prod.js"></script>
+    <script type="text/javascript" th:src="@{../../js/editAuthorComponent.js}"
+            src="../static/js/editAuthorComponent.js"></script>
+    <script type="text/javascript" th:src="@{../../js/editGenresComponent.js}"
+            src="../static/js/editGenresComponent.js"></script>
+    <script type="text/javascript" th:src="@{../../js/Root.js}" src="../static/js/Root.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div th:insert="fragments/editAuthorTemplate::edit-author"></div>
+<div th:insert="fragments/editGenresTemplate::edit-genres"></div>
+<div class="library-vue-root">
+    <form th:action="@{'/books/edit/' + ${book.id}}" method="post">
+        <div class="edit-book__section">
+            <span class="edit-book__section_label">Name:</span>
+            <input class="edit-book__name_value" type="text" th:value="${name}" name="name"/>
+        </div>
+
+
+        <edit-author-component th:attr="chosen-author=${book.author},
+                                    all-authors=${allAuthors}">
+
+        </edit-author-component>
+        <edit-genres-component th:attr="chosen-genres=${book.genres},
+                                    all-genres=${allGenres}">
+
+        </edit-genres-component>
+        <input type="hidden" v-model="selectedGenres" name="genres"/>
+        <input type="submit"/>
+
+    </form>
+</div>
+
+
+</body>
+</html>

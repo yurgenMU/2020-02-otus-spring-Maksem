@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="edit-genres">
+    <script type="text/x-template" id="edit-genres-template">
+        <div class="edit-book__section">
+            <span class="edit-book__section_label">Genres:</span>
+            <div class="edit-book__genres-container">
+                <div class="services-filter__items">
+                    <div class="services-filter__header services-filter__header__wide">
+                        <h5 class="services__headline">Chosen genres:</h5>
+                    </div>
+                    <div v-for="genre in selectedGenres" class="services-filter__item"
+                         @click="genre.selected = !genre.selected"
+                         :class="{'item_selected': genre.selected}">{{ genre.origin.name }}
+                    </div>
+                </div>
+
+                <div class="edit-book__genres-buttons-container">
+                    <button type="button" class="edit-book__genres-button" @click="addToSelected"> + </button>
+                    <button type="button" class="btn btn btn_stroke btn_outline btn_chosen btn_prev" @click="removeFromSelected"> - </button>
+                </div>
+                <div class="services-filter__content">
+                    <div class="services-filter__header services-filter__header__wide">
+                        <h5 class="services__headline">Not chosen genres:</h5>
+                    </div>
+                    <div v-for="genre in unselectedGenres" class="services-filter__item"
+                         @click="genre.selected = !genre.selected"
+                         :class="{'item_selected': genre.selected}">{{ genre.origin.name }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </script>
+
+</div>
+</body>
+</html>
