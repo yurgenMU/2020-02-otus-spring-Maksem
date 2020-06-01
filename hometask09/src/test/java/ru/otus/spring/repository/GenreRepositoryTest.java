@@ -67,7 +67,7 @@ public class GenreRepositoryTest {
     void successful_update_test() {
         Genre genre = new Genre(ID_3, FANTASY_GENRE);
         genreDao.save(genre);
-        assertEquals(ID_3, (long) genreDao.findByName(FANTASY_GENRE).getId());
+        assertEquals(FANTASY_GENRE, genreDao.findById(ID_3).orElseThrow().getName());
     }
 
 }

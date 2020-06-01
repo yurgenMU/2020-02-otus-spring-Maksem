@@ -19,7 +19,7 @@ import static ru.otus.spring.util.TestUtils.*;
 
 @DisplayName("Spring Data JPA-based repository for commentaries processing")
 @DataJpaTest
-public class CommentaryRepositoryTest {
+public class  CommentaryRepositoryTest {
 
     public static final String I_LIKE_THIS_BOOK_VERY_MUCH = "I like this book very much";
     @Autowired

@@ -48,7 +48,7 @@ public class BookRepositoryTest {
         bookDao.save(bookToAdd);
         List<Book> allBooks = (List<Book>) bookDao.findAll();
         assertEquals(7, allBooks.size());
-        assertEquals(ID_7, (long) bookDao.findByName(NEW_NAME).getId());
+        assertEquals(NEW_NAME, bookDao.findById(ID_7).orElseThrow().getName());
     }
 
     @Test
@@ -58,12 +58,6 @@ public class BookRepositoryTest {
         assertEquals(5, allBooks.size());
     }
 
-    @Test
-    void successful_removal_by_name_test() {
-        bookDao.deleteByName(PQ_17);
-        List<Book> allBooks = (List<Book>) bookDao.findAll();
-        assertEquals(5, allBooks.size());
-    }
 
     @Test
     void successful_update_test() {

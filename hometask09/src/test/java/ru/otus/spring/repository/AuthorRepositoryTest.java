@@ -54,7 +54,7 @@ public class AuthorRepositoryTest {
 
     @Test
     void successful_removal_by_name_test() {
-        authorRepository.deleteByName(PIKUL);
+        authorRepository.deleteById(ID_2);
         assertNull(em.find(Author.class, ID_2));
     }
 
@@ -62,7 +62,7 @@ public class AuthorRepositoryTest {
     void successful_update_test() {
         Author author = new Author(ID_1, GOGOL);
         authorRepository.save(author);
-        assertEquals(ID_1, (long) authorRepository.findByName(GOGOL).getId());
+        assertEquals(GOGOL, authorRepository.findById(ID_1).orElseThrow().getName());
     }
 
     private List<Author> getAll() {
