@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new genre</title>
+</head>
+<body>
+<span><a th:href="@{'/'}" th:text="'Home'"></a></span>
+<form th:action="@{/genres/new}" method="post">
+    <div class="edit-book__section">
+        <span class="edit-book__section_label">Name:</span>
+        <input class="edit-book__name_value" type="text" name="name"/>
+    </div>
+
+    <input type="submit" value="Save"/>
+
+</form>
+</body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+</html>

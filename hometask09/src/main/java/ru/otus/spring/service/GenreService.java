@@ -7,13 +7,15 @@ import java.util.List;
 
 public interface GenreService {
 
+    Genre findGenre(long id);
+
     void addGenre(String name);
 
-    void editGenre(String identifier, String newName);
+    void editGenre(long id, String newName);
 
-    List<Book> getAllBooksForGenre(String identifier);
+    List<Book> getAllBooksForGenre(long id);
 
-    void removeGenre(String identifier);
+    void removeGenre(long id);
 
     List<Genre> getAllGenres();
 }

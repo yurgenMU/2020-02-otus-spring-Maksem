@@ -10,11 +10,11 @@ public interface AuthorService {
 
     void addAuthor(String name);
 
-    void editAuthor(String identifier, String newName);
+    void editAuthor(long id, String newName);
 
     List<Book> getAllBooksForAuthor(long id);
 
-    void removeAuthor(String identifier);
+    void removeAuthor(long id);
 
     List<Author> getAllAuthors();
 }

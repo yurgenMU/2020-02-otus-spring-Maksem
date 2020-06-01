@@ -5,12 +5,14 @@ Vue.component("EditGenresComponent", {
         return {
             selectedGenres: [],
             unselectedGenres: [],
-            allGenres: []
         }
     },
 
     props: {
-        chosenGenres: String,
+        chosenGenres: {
+                type: String,
+                default: '[]'
+        },
         allGenres: String
     },
 

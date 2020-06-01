@@ -2,31 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link th:href="@{/../../css/main.less}" rel="stylesheet/less"/>
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
+    <title>Books</title>
 </head>
 <body>
-<table>
-    <div th:each="book : ${books}">
-        <tr th:each="genre,iter: ${book.genres}">
+<span><a th:href="@{'/'}" th:text="'Home'"></a></span>
+<div>
+    <span class="home-link"><a th:href="@{/books/new}" th:text="'Add new book'"></a></span>
+</div>
+<div class="library-container">
+    <table class="table">
+        <div th:each="book : ${books}">
+            <tr th:each="genre,iter: ${book.genres}">
 
-            <td th:if="${iter.index == 0}" th:rowspan="${book.genres.size()}">
-                <a th:href="@{'/books/edit/'+${book.id}}" href="/books/edit.html" th:text="${book.name}">Book</a></td>
-            <td th:if="${iter.index == 0}" th:rowspan="${book.genres.size()}">
-                <a th:href="@{'/authors/edit/'+${book.author.id}}" href="/authors/edit.html" th:text="${book.author.name}">Author</a>
-            </td>
-            <td>
-                <a th:href="@{'/genres/edit/'+${genre.id}}" href="/genres/edit.html" th:text="${genre.name}">Author</a>
-            </td>
-        </tr>
-    </div>
+                <td th:if="${iter.index == 0}" th:rowspan="${book.genres.size()}">
+                    <a th:href="@{'/books/edit/'+${book.id}}" href="/books/edit.html" th:text="${book.name}">Book</a></td>
+                <td th:if="${iter.index == 0}" th:rowspan="${book.genres.size()}">
+                    <a th:href="@{'/authors/edit/'+${book.author.id}}" href="/authors/edit.html" th:text="${book.author.name}">Author</a>
+                </td>
+                <td>
+                    <a th:href="@{'/genres/edit/'+${genre.id}}" href="/genres/edit.html" th:text="${genre.name}">Author</a>
+                </td>
+            </tr>
+        </div>
 
-</table>
-Add book
-<form action="#" th:action="@{/books/add}" method="post">
-    <input type="text" th:value="${name}" name="name"/>
-    <div>azaza</div>
-    <input type="submit" />
-</form>
-
+    </table>
+</div>
 </body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+<script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 </html>

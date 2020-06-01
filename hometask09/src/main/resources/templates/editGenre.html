@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/../../css/main.less}" rel="stylesheet/less"/>
-    <script src="/webjars/less/3.8.1/less.js"></script>
     <link rel="stylesheet"
-          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
-    <title>Edit Author</title>
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
+    <title>Edit Genre</title>
 </head>
 <body>
 <div class="library-container">
     <span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
     <div class="section">
-        <form th:action="@{'/authors/edit/' + ${author.id}}" method="post">
+        <form th:action="@{'/genres/edit/' + ${genre.id}}" method="post">
             <div class="edit-book__section">
                 <span class="edit-book__section_label">Name:</span>
-                <input class="edit-genre__name_value" type="text" th:value="${author.name}" name="name"/>
+                <input class="edit-genre__name_value" type="text" th:value="${genre.name}" name="name"/>
             </div>
             <input type="submit" value="Save changes"/>
 
@@ -30,12 +29,13 @@
             </ul>
         </div>
 
-        <form th:action="@{'/authors/delete/' + ${author.id}}" method="post">
-            <input type="submit" value="Delete author"/>
+        <form th:action="@{'/genres/delete/' + ${genre.id}}" method="post">
+            <input type="submit" value="Delete genre"/>
         </form>
     </div>
-
 </div>
+
+
 
 </body>
 <script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>

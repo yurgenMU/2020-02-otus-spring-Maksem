@@ -9,8 +9,6 @@ import ru.otus.spring.util.LibraryException;
 
 import java.util.List;
 
-import static ru.otus.spring.util.LibraryUtils.retrieveEntity;
-
 @Service
 public class CommentaryServiceImpl implements CommentaryService {
 
@@ -23,33 +21,33 @@ public class CommentaryServiceImpl implements CommentaryService {
     }
 
     @Override
-    public void addCommentaryToBook(String bookIdentifier, String content) {
-        Book book = retrieveEntity(bookIdentifier, bookRepository::retrieveById, bookRepository::findByName);
-        if (book == null) {
-            throw new LibraryException("Book with this identifier does not exist");
-        }
+    public Commentary find(long id) {
+        return commentaryRepository.findById(id)
+                .orElseThrow(() -> new LibraryException("Commentary with this identifier does not exist"));
+    }
+
+    @Override
+    public void addCommentaryToBook(long bookId, String content) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new LibraryException("Book with this identifier does not exist"));
         Commentary commentary = new Commentary(content, book);
         commentaryRepository.save(commentary);
     }
 
     @Override
-    public void updateCommentary(String commentaryIdentifier, String content) {
-        long id = Long.parseLong(commentaryIdentifier);
-        commentaryRepository.updateCommentary(id, content);
+    public void updateCommentary(long commentaryId, String content) {
+        commentaryRepository.updateCommentary(commentaryId, content);
     }
 
     @Override
-    public void deleteCommentary(String commentaryIdentifier) {
-        long id = Long.parseLong(commentaryIdentifier);
-        commentaryRepository.deleteById(id);
+    public void deleteCommentary(long commentaryId) {
+        commentaryRepository.deleteById(commentaryId);
     }
 
     @Override
-    public List<Commentary> getAllCommentaries(String bookIdentifier) {
-        Book book = retrieveEntity(bookIdentifier, bookRepository::retrieveById, bookRepository::findByName);
-        if (book == null) {
-            throw new LibraryException("Book with this identifier does not exist");
-        }
+    public List<Commentary> getAllCommentaries(long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new LibraryException("Book with this identifier does not exist"));
         return commentaryRepository.findAllByBook(book);
     }
 }

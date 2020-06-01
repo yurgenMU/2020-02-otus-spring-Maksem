@@ -5,12 +5,14 @@ import ru.otus.spring.domain.Commentary;
 import java.util.List;
 
 public interface CommentaryService {
+
+    Commentary find(long id);
     
-    void addCommentaryToBook(String bookIdentifier, String content);
+    void addCommentaryToBook(long bookId, String content);
 
-    void updateCommentary(String commentaryIdentifier, String content);
+    void updateCommentary(long id, String content);
 
-    void deleteCommentary(String commentaryIdentifier);
+    void deleteCommentary(long id);
 
-    List<Commentary> getAllCommentaries(String bookIdentifier);
+    List<Commentary> getAllCommentaries(long bookId);
 }

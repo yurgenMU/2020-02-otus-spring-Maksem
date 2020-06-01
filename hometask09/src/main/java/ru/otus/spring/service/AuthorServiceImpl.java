@@ -9,9 +9,6 @@ import ru.otus.spring.util.LibraryException;
 
 import java.util.List;
 
-import static java.util.Objects.nonNull;
-import static ru.otus.spring.util.LibraryUtils.isNumeric;
-import static ru.otus.spring.util.LibraryUtils.retrieveEntity;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -36,35 +33,20 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void editAuthor(String identifier, String newName) {
-        Long id;
-        if (isNumeric(identifier)) {
-            id = Long.parseLong(identifier);
-            authorRepository.save(new Author(id, newName));
-        } else {
-            Author author = authorRepository.findByName(identifier);
-            if (nonNull(author)) {
-                id = author.getId();
-                authorRepository.save(new Author(id, newName));
-            }
-        }
+    public void editAuthor(long id, String newName) {
+        authorRepository.save(new Author(id, newName));
     }
 
     @Override
     public List<Book> getAllBooksForAuthor(long id) {
         Author author = authorRepository.findById(id)
-                        .orElseThrow(() -> new LibraryException("Author with this identifier not found"));
+                .orElseThrow(() -> new LibraryException("Author with this identifier not found"));
         return bookRepository.findAllByAuthor(author);
     }
 
     @Override
-    public void removeAuthor(String identifier) {
-        if (isNumeric(identifier)) {
-            long id = Long.parseLong(identifier);
-            authorRepository.deleteById(id);
-        } else {
-            authorRepository.deleteByName(identifier);
-        }
+    public void removeAuthor(long id) {
+        authorRepository.deleteById(id);
     }
 
     @Override

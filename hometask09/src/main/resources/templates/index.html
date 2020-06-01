@@ -2,12 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script type="text/javascript" th:src="@{js/vue-2.4.4.prod.js}" src="../static/js/vue-2.4.4.prod.js"></script>
-    <script type="text/javascript" th:src="@{js/editGenresComponent.js}" src="../static/js/editGenresComponent.js"></script>
-    <script type="text/javascript" th:src="@{js/Root.js}" src="../static/js/Root.js"></script>
-    <title>Title</title>
+    <link th:href="@{css/main.less}" rel="stylesheet/less"/>
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
+    <title>Library</title>
 </head>
 <body>
-<a href="/books">Books</a>
+<div class="entities-container">
+    <div class="entity-heading">
+        <a href="/books">Books</a>
+    </div>
+    <div class="entity-heading">
+        <a href="/authors">Authors</a>
+    </div>
+    <div class="entity-heading">
+        <a href="/genres">Genres</a>
+    </div>
+</div>
+
+
 </body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
 </html>

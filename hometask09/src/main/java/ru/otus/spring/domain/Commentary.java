@@ -18,7 +18,7 @@ public class Commentary {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ManyToOne(targetEntity = Book.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Book.class, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "book_id")
     private Book book;
 

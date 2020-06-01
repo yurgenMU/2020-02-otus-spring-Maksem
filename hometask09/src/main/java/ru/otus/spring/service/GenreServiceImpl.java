@@ -9,10 +9,6 @@ import ru.otus.spring.util.LibraryException;
 
 import java.util.List;
 
-import static java.util.Objects.nonNull;
-import static ru.otus.spring.util.LibraryUtils.isNumeric;
-import static ru.otus.spring.util.LibraryUtils.retrieveEntity;
-
 @Service
 public class GenreServiceImpl implements GenreService {
 
@@ -25,40 +21,31 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    public Genre findGenre(long id) {
+        return genreRepository.findById(id)
+                .orElseThrow(() -> new LibraryException("Genre with this id does not exist in library"));
+    }
+
+    @Override
     public void addGenre(String name) {
         genreRepository.save(new Genre(null, name));
     }
 
     @Override
-    public void editGenre(String identifier, String newName) {
-        Long id;
-        if (isNumeric(identifier)) {
-            id = Long.parseLong(identifier);
-            genreRepository.save(new Genre(id, newName));
-        } else {
-            Genre genre = genreRepository.findByName(identifier);
-            if (nonNull(genre)) {
-                id = genre.getId();
-                genreRepository.save(new Genre(id, newName));
-            }
-        }
+    public void editGenre(long id, String newName) {
+        genreRepository.save(new Genre(id, newName));
     }
 
     @Override
-    public List<Book> getAllBooksForGenre(String identifier) {
-        Genre genre = retrieveEntity(identifier, id -> genreRepository.findById(id)
-                .orElseThrow(() -> new LibraryException("Genre with this id not found")), genreRepository::findByName);
+    public List<Book> getAllBooksForGenre(long id) {
+        Genre genre = genreRepository.findById(id)
+                .orElseThrow(() -> new LibraryException("Genre with this id not found"));
         return bookRepository.findAllByGenres(genre);
     }
 
     @Override
-    public void removeGenre(String identifier) {
-        if (isNumeric(identifier)) {
-            long id = Long.parseLong(identifier);
-            genreRepository.deleteById(id);
-        } else {
-            genreRepository.deleteByName(identifier);
-        }
+    public void removeGenre(long id) {
+        genreRepository.deleteById(id);
     }
 
     @Override

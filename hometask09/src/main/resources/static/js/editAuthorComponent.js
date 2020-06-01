@@ -11,50 +11,21 @@ Vue.component("EditAuthorComponent", {
     },
 
     props: {
-        chosenAuthor: String,
+        chosenAuthor: {
+            type: String,
+            default: '{}'
+        },
         allAuthors: String
     },
 
     mounted: function () {
         var author = JSON.parse(this.chosenAuthor);
         this.selectedAuthor = author;
-        this.searchTerm = author.name;
+        if (author.name) {
+            this.searchTerm = author.name;
+        }
         this.setAuthorToRoot();
     },
-
-    directives: {
-        'click-outside': {
-            priority: 700,
-            bind(el, binding, vNode) {
-                if (typeof binding.value !== 'function') {
-                    var compName = vNode.context.name;
-                    var warn = '[Vue-click-outside:] provided expression ' + binding.expression + ' is not a function, but has to be';
-                    if (compName) {
-                        warn += 'Found in component ' + compName;
-                    }
-                    console.warn(warn);
-                }
-                var bubble = binding.modifiers.bubble;
-                var handler = function (e) {
-                    if (bubble || (!el.contains(e.target) && el !== e.target)) {
-                        binding.value(e);
-                    }
-                };
-                el.__vueClickOutside__ = handler;
-                document.addEventListener('click', handler);
-            },
-
-            unbind() {
-                document.removeEventListener('click', el.__vueClickOutside__);
-                el.__vueClickOutside__ = null;
-            },
-
-            stopProp(event) {
-                event.stopPropagation()
-            }
-        }
-    },
-
 
     computed: {
 
@@ -72,12 +43,6 @@ Vue.component("EditAuthorComponent", {
             );
 
         },
-
-        // wrappedGenres: function () {
-        //     return JSON.parse(this.allGenres).map(function (service) {
-        //         return {selected: false, origin: service};
-        //     });
-        // },
     },
 
     methods: {
@@ -93,7 +58,9 @@ Vue.component("EditAuthorComponent", {
         },
 
         startEditing: function () {
-            this.searchTerm = this.selectedAuthor.name;
+            if (this.selectedAuthor.name) {
+                this.searchTerm = this.selectedAuthor.name;
+            }
             this.showPopup = true;
         },
 

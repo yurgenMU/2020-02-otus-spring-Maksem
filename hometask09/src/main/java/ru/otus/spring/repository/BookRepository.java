@@ -13,10 +13,6 @@ import java.util.List;
 
 public interface BookRepository extends CrudRepository<Book, Long> {
 
-    Book findByName(String name);
-
-    void deleteByName(String name);
-
     List<Book> findAllByGenres(Genre genre);
 
     @EntityGraph("books-entity-graph")
@@ -24,10 +20,5 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
     @EntityGraph("books-entity-graph")
     Iterable<Book> findAll();
-
-    default Book retrieveById(Long id) {
-        return this.findById(id)
-                .orElseThrow(() -> new LibraryException("Book with this identifier not found"));
-    }
 
 }

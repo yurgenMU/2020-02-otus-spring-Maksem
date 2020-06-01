@@ -1,0 +1,78 @@
+.edit-book {
+  border: 1px #cccccc;
+  width: 50%;
+  padding-left: 15px;
+
+
+  & .item_selected {
+    background-color: cornflowerblue;
+  }
+
+  & .filtered-authors-list {
+    border: 1px solid cadetblue;
+  }
+
+  & .author {
+    padding: 5px 5px 5px 10px;
+
+    &:hover {
+      background-color: cornflowerblue;
+    }
+
+  }
+
+  & .section {
+    border: 1px solid #575151;
+    padding: 3px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & .genres-container {
+    display: flex;
+    flex-direction: row;
+    height: 300px;
+
+    .genres-column {
+      width: calc(50%);
+      padding: 10px;
+    }
+
+    & .genre-item {
+      padding: 5px 5px 5px 10px;
+    }
+
+    & .genres-buttons-container {
+      padding: 5px;
+      position: relative;
+      transform: translateY(50%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .genres-list {
+      border: 1px solid;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 62px);
+    }
+  }
+
+  & .commentaries-section {
+    border: 1px solid;
+    padding: 5px;
+    margin: 3px;
+
+    & .date-column {
+      width: 25%;
+      color: #427693;
+    }
+
+    & .content-column {
+      width: 60%;
+    }
+  }
+
+
+}
