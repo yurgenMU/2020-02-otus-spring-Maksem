@@ -12,11 +12,11 @@
     <span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
     <div class="section">
         <form th:action="@{'/genres/edit/' + ${genre.id}}" method="post">
-            <div class="edit-book__section">
+            <div class="edit-genre-input">
                 <span class="edit-book__section_label">Name:</span>
                 <input class="edit-genre__name_value" type="text" th:value="${genre.name}" name="name"/>
             </div>
-            <input type="submit" value="Save changes"/>
+            <input type="submit" class="btn btn-primary" value="Save changes"/>
 
         </form>
 
@@ -30,7 +30,7 @@
         </div>
 
         <form th:action="@{'/genres/delete/' + ${genre.id}}" method="post">
-            <input type="submit" value="Delete genre"/>
+            <input type="submit" class="btn btn-danger" value="Delete genre"/>
         </form>
     </div>
 </div>
