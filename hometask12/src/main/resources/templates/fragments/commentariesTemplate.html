@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="commentaries" class="commentaries-section">
+        <span>
+            <a th:href="@{'/commentaries/new/'+${book.id}}" th:text="'Add commentary'"></a>
+        </span>
+    <div>
+        <table>
+            <tr th:each="comment: ${comments}">
+
+                <td class="date-column" th:text="${#dates.format(comment.date, 'dd-MM-yyyy HH:mm')}">
+                </td>
+                <td class="content-column" th:text="${comment.content}">
+                </td>
+                <td>
+                    <input type="button"
+                           th:onclick="'window.location.href = \'' + @{/commentaries/edit/{id}(id=${comment.id})} + '\''"
+                           class="btn btn-light" value="Edit">
+                </td>
+                <td>
+                    <form th:action="@{'/commentaries/delete/' + ${comment.id}}" method="post">
+                        <input type="hidden" th:value="${book.id}" name="bookId"/>
+                        <input type="submit" class="btn btn-danger" value="Delete commentary"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

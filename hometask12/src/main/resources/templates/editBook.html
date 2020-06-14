@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/../../css/edit-book.less}" rel="stylesheet/less"/>
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+    <title>Edit existing book</title>
+</head>
+<body>
+<div class="edit-book">
+    <div class="library-vue-root">
+        <span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
+        <span class="logout-link"><a th:href="@{'/logout'}" th:text="'Logout'"></a></span>
+        <form th:action="@{'/books/edit/' + ${book.id}}" method="post">
+            <div class="section">
+                <span class="section_label">Name:</span>
+                <input class="name_value form-control" type="text" th:value="${book.name}" name="name"/>
+            </div>
+
+
+            <edit-author-component th:attr="chosen-author=${book.author},
+                                    all-authors=${allAuthors}">
+
+            </edit-author-component>
+            <edit-genres-component th:attr="chosen-genres=${book.genres},
+                                    all-genres=${allGenres}">
+
+            </edit-genres-component>
+            <input type="hidden" v-model="selectedAuthor" name="authorId"/>
+            <input type="hidden" v-model="selectedGenres" name="genres"/>
+
+            <div th:insert="fragments/commentariesTemplate::commentaries"></div>
+
+            <input type="submit" class="btn btn-primary" value="Save changes"/>
+
+        </form>
+
+        <form th:action="@{'/books/delete/' + ${book.id}}" method="post">
+            <input type="submit" class="btn btn-primary" value="Delete book"/>
+        </form>
+
+
+    </div>
+</div>
+<div th:insert="fragments/editAuthorTemplate::edit-author"></div>
+<div th:insert="fragments/editGenresTemplate::edit-genres"></div>
+
+</body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+<script type="text/javascript" src="/webjars/vue/2.6.11/vue.js"></script>
+<script type="text/javascript" th:src="@{../../js/editAuthorComponent.js}"
+        src="../static/js/editAuthorComponent.js"></script>
+<script type="text/javascript" th:src="@{../../js/editGenresComponent.js}"
+        src="../static/js/editGenresComponent.js"></script>
+<script type="text/javascript" th:src="@{../../js/Root.js}" src="../static/js/Root.js"></script>
+</html>

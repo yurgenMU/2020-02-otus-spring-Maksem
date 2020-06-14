@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/../../css/main.less}" rel="stylesheet/less"/>
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
+    <title>Edit Genre</title>
+</head>
+<body>
+<div class="library-container">
+    <span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
+    <span class="logout-link"><a th:href="@{'/logout'}" th:text="'Logout'"></a></span>
+    <div class="section">
+        <form th:action="@{'/genres/edit/' + ${genre.id}}" method="post">
+            <div class="edit-genre-input">
+                <span class="edit-book__section_label">Name:</span>
+                <input class="edit-genre__name_value form-control" type="text" th:value="${genre.name}" name="name"/>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Save changes"/>
+
+        </form>
+
+        <div>
+            Books:
+            <ul th:each="book: ${books}">
+                <li th:text="${book.name}">Book
+                </li>
+
+            </ul>
+        </div>
+
+        <form th:action="@{'/genres/delete/' + ${genre.id}}" method="post">
+            <input type="submit" class="btn btn-danger" value="Delete genre"/>
+        </form>
+    </div>
+</div>
+
+
+
+</body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+</html>

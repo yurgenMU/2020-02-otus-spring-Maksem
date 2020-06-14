@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/../../css/main.less}" rel="stylesheet/less"/>
+
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+    <title th:value="'Edit commentary'"></title>
+</head>
+<body>
+<div class="library-container">
+    <span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
+    <span class="logout-link"><a th:href="@{'/logout'}" th:text="'Logout'"></a></span>
+
+    <form th:action="@{'/commentaries/edit/' + ${comment.id}}" method="post">
+        <div class="section">
+            <span class="edit-book__section_label" th:value="'Add commentary to' + ${comment.book.name}"></span>
+            <textarea class="form-control" th:inline="text" name="content">[[${comment.content}]]</textarea>
+
+            <input type="hidden" th:value="${comment.book.id}" name="bookId"/>
+            <input type="submit" class="btn btn-light" value="Save changes"/>
+        </div>
+    </form>
+</div>
+
+</body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+</html>
+

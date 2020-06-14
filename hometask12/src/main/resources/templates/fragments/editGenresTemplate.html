@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="edit-genres">
+    <script type="text/x-template" id="edit-genres-template">
+        <div class="section">
+            <span class="section_label">Genres:</span>
+            <div class="genres-container">
+                <div class="genres-column">
+                    <div class="services-filter__header services-filter__header__wide">
+                        <h5 class="services__headline">Chosen genres:</h5>
+                    </div>
+                    <div class="genres-list">
+                        <div v-for="genre in selectedGenres" class="genre-item"
+                             @click="genre.selected = !genre.selected"
+                             :class="{'item_selected': genre.selected}">{{ genre.origin.name }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="genres-buttons-container">
+                    <button type="button" class="btn " @click="removeFromSelected">&#8250;</button>
+                    <button type="button" class="btn" @click="addToSelected">&#8249;</button>
+                </div>
+                <div class="genres-column">
+                    <div class="">
+                        <h5 class="">Not chosen genres:</h5>
+                    </div>
+                    <div class="genres-list">
+                        <div v-for="genre in unselectedGenres" class="genre-item"
+                             @click="genre.selected = !genre.selected"
+                             :class="{'item_selected': genre.selected}">{{ genre.origin.name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </script>
+
+</div>
+</body>
+</html>
