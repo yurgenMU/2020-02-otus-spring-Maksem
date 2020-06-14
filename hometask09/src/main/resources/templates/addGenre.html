@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/../../css/main.less}" rel="stylesheet/less"/>
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
+    <title>Add new genre</title>
+</head>
+<body>
+<span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
+<span class="logout-link"><a th:href="@{'/logout'}" th:text="'Logout'"></a></span>
+
+<div class="add-genre">
+    <form th:action="@{/genres/new}" method="post">
+        <div class="section">
+            <span class="edit-book__section_label">Name:</span>
+            <input class="edit-book__name_value form-control" type="text" name="name"/>
+
+
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Save"/>
+
+
+
+    </form>
+</div>
+
+</body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+</html>
