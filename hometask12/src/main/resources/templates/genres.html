@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/../../css/main.less}" rel="stylesheet/less"/>
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
+    <title>Genres</title>
+</head>
+<body>
+<span class="home-link"><a th:href="@{'/'}" th:text="'Home'"></a></span>
+<span class="logout-link"><a th:href="@{'/logout'}" th:text="'Logout'"></a></span>
+<div>
+    <span class="add-new"><a th:href="@{/genres/new}" th:text="'Add new genre'"></a></span>
+</div>
+<div class="library-container">
+    <table class="table">
+        <div th:each="wrappedGenre : ${genres}">
+            <tr th:each="book,iter: ${wrappedGenre.books}">
+
+                <td th:if="${iter.index == 0}" th:rowspan="${wrappedGenre.books.size()}">
+                    <a th:href="@{'/genres/edit/'+${wrappedGenre.genre.id}}"
+                       href="/genres/edit.html" th:text="${wrappedGenre.genre.name}">Genre</a></td>
+                <td>
+                    <a th:href="@{'/books/edit/'+${book.id}}"
+                       href="/books/edit.html" th:text="${book.name}">Book</a>
+                </td>
+            </tr>
+        </div>
+    </table>
+</div>
+
+</body>
+<script type="text/javascript" src="/webjars/less/3.8.1/less.js"></script>
+</html>
